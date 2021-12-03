@@ -98,18 +98,11 @@ func (r *RouterGroup) hanlde(op Operator) bool {
 
 	// 通过断言接口获取 path
 	if path == "" {
-		h, ok := op.(PathOperator)
-		if !ok {
-			return false
-		}
-
+		h := op.(PathOperator)
 		path = h.Path()
 	}
 
-	mop, ok := op.(MethodOperator)
-	if !ok {
-		return false
-	}
+	mop := op.(MethodOperator)
 
 	r.ginRG.Handle(mop.Method(), path, r.handlerfunc(op))
 	return true

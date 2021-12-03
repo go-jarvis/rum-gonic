@@ -16,3 +16,11 @@ func (index *Index) Output(c *gin.Context) (interface{}, error) {
 		"message": "index.html",
 	}, nil
 }
+
+// func (*Index) Method() string {
+// 	return http.MethodGet
+// }
+
+// func (*Index) Path() string {
+// 	return "/index"
+// }

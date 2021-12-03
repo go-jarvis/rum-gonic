@@ -1,12 +1,12 @@
 package pingpong
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/httpx"
 )
 
 type PingPong struct {
-	httpx.MethodGet
 	Name string `uri:"name"`
 	Age  int    `query:"age"`
 }
@@ -14,7 +14,11 @@ type PingPong struct {
 func (pp *PingPong) Path() string {
 	return "/ping/:name"
 }
+
+func (*PingPong) Method() string {
+	return http.MethodGet
+}
+
 func (pp *PingPong) Output(c *gin.Context) (interface{}, error) {
-	// return "pong", nil
 	return *pp, nil
 }
