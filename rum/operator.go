@@ -10,11 +10,6 @@ type PathOperator interface {
 	Path() string
 }
 
-type LogicOperator interface {
-	Operator
-	MethodOperator
-}
-
 type MethodOperator interface {
 	Method() string
 }

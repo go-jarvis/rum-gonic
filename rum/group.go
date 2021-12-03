@@ -65,32 +65,14 @@ func (r *RouterGroup) register(parent *gin.RouterGroup) {
 	// 注册子路由组
 	r.ginRG = parent.Group(r.path)
 
-	// ginfuncs := make([]gin.HandlerFunc, 0)
 	for _, op := range r.operators {
 		// 添加中间件
-		if mid, ok := op.(MiddlewareOperator); ok {
-			r.ginRG.Use(mid.MiddlewareFunc())
+		if r.use(op) {
 			continue
 		}
 
-		// 通过反射获取 path
-		path := routePath(op)
-		// 通过断言接口获取 path
-		if path == "" {
-			h, ok := op.(PathOperator)
-			if !ok {
-				continue
-			}
-
-			path = h.Path()
-		}
-
-		mop, ok := op.(MethodOperator)
-		if !ok {
-			continue
-		}
-
-		r.ginRG.Handle(mop.Method(), path, r.handle(op))
+		// 添加 用户逻辑 路由
+		r.hanlde(op)
 	}
 
 	for child := range r.children {
@@ -98,8 +80,43 @@ func (r *RouterGroup) register(parent *gin.RouterGroup) {
 	}
 }
 
-// handle 处理业务逻辑， 在 gin 中注册路由
-func (r *RouterGroup) handle(op Operator) HandlerFunc {
+// use 添加中间件
+func (r *RouterGroup) use(op Operator) bool {
+	if mid, ok := op.(MiddlewareOperator); ok {
+		r.ginRG.Use(mid.MiddlewareFunc())
+		return true
+	}
+
+	return false
+}
+
+// handle 添加路由
+func (r *RouterGroup) hanlde(op Operator) bool {
+
+	// 通过反射获取 path
+	path := routePath(op)
+
+	// 通过断言接口获取 path
+	if path == "" {
+		h, ok := op.(PathOperator)
+		if !ok {
+			return false
+		}
+
+		path = h.Path()
+	}
+
+	mop, ok := op.(MethodOperator)
+	if !ok {
+		return false
+	}
+
+	r.ginRG.Handle(mop.Method(), path, r.handlerfunc(op))
+	return true
+}
+
+// handlerfunc 处理业务逻辑， 在 gin 中注册路由
+func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 	return func(c *gin.Context) {
 
