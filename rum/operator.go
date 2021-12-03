@@ -1,6 +1,8 @@
 package rum
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type Operator interface {
 	Output(*gin.Context) (interface{}, error)

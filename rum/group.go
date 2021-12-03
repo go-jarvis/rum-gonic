@@ -20,6 +20,7 @@ type RouterGroup struct {
 	path      string
 	ginRG     *gin.RouterGroup
 	operators []Operator
+	// fileOperators []FileOperator
 
 	// 子路由
 	children map[*RouterGroup]bool
@@ -36,6 +37,7 @@ func NewRouterGroup(path string) *RouterGroup {
 		path:      path,
 		children:  make(map[*RouterGroup]bool),
 		operators: make([]Operator, 0),
+		// fileOperators: make([]FileOperator, 0),
 	}
 }
 
@@ -80,6 +82,16 @@ func (r *RouterGroup) register(parent *RouterGroup) {
 		// 添加 用户逻辑 路由
 		r.hanlde(op)
 	}
+
+	// for _, op := range r.fileOperators {
+	// 	r.ginRG.Handle(
+	// 		op.Method(),
+	// 		op.Path(),
+	// 		func(c *gin.Context) {
+	// 			op.Output(c)
+	// 		},
+	// 	)
+	// }
 
 	for child := range r.children {
 		child.register(r)
@@ -126,6 +138,12 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 		}
 
 		ret, err := op.Output(c)
+
+		// 检测是否在 operator 已经中止， 例如 StaticFile 服务
+		if c.IsAborted() {
+			return
+		}
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
@@ -134,3 +152,11 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 		c.JSON(http.StatusOK, ret)
 	}
 }
+
+func (r *RouterGroup) addOperators(ops ...Operator) {
+	r.operators = append(r.operators, ops...)
+}
+
+// func (r *RouterGroup) addFileOperators(fops ...FileOperator) {
+// 	r.fileOperators = append(r.fileOperators, fops...)
+// }

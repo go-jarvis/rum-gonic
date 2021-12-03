@@ -20,6 +20,8 @@ func main() {
 
 	r.Register(apis.RouterV0)
 
+	r.StaticFile("/user", "user.html")
+
 	if err := r.Run(); err != nil {
 		panic(err)
 	}
