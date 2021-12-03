@@ -41,7 +41,7 @@ func (r *RouterGroup) RouterGroup() *RouterGroup {
 	return r
 }
 
-// Register 添加子 router group 或 logic router
+// Register 添加子 router group ,  logic , middleware
 func (r *RouterGroup) Register(ops ...Operator) {
 
 	for _, op := range ops {
@@ -56,7 +56,6 @@ func (r *RouterGroup) Register(ops ...Operator) {
 			r.operators = append(r.operators, logicOp)
 		}
 	}
-
 }
 
 // register 遍历子节点并初始化
