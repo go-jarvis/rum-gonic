@@ -16,7 +16,7 @@ type LogicOperator interface {
 }
 
 type GroupOperator interface {
-	getRouterGroup() *Router
+	getRouter() *Router
 }
 
 type MethodOperator interface {

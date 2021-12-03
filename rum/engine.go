@@ -33,7 +33,6 @@ func New(r *gin.Engine) *Engine {
 // Run 监听 tcp 端口
 func (e *Engine) Run(addrs ...string) error {
 
-	// e.RouterGroup.initial(e.RouterGroup)
 	e.register()
 
 	return e.engine.Run(addrs...)

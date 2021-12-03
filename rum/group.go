@@ -8,45 +8,45 @@ import (
 )
 
 // 接口检查
-var _ Operator = (*Router)(nil)
+// var _ Operator = (*Router)(nil)
 var _ GroupOperator = (*Router)(nil)
 
 type Router struct {
-	ginRG *gin.RouterGroup
-
+	// 当前路由
 	path      string
-	children  map[*Router]bool
-	operators []LogicOperator
+	ginRG     *gin.RouterGroup
+	operators []Operator
+
+	// 子路由
+	children map[*Router]bool
+
+	// 接口实现
+	Operator
 }
 
 func NewRouterGroup(path string) *Router {
 	return &Router{
 		path:      path,
 		children:  make(map[*Router]bool),
-		operators: make([]LogicOperator, 0),
+		operators: make([]Operator, 0),
 	}
 }
 
-// Output 实现 Operator interface
-func (r *Router) Output(c *gin.Context) (interface{}, error) {
-	return nil, nil
-}
-
-// getRouterGroup 实现 GroupOperator interface
-func (r *Router) getRouterGroup() *Router {
+// getRouter 实现 GroupOperator interface
+func (r *Router) getRouter() *Router {
 	return r
 }
 
 // Register 添加子 router group 或 logic router
 func (r *Router) Register(ops ...Operator) {
 
-	if r.operators == nil {
-		r.operators = make([]LogicOperator, 0)
-	}
+	// if r.operators == nil {
+	// 	r.operators = make([]LogicOperator, 0)
+	// }
 
 	for _, op := range ops {
 		if groupOp, ok := op.(GroupOperator); ok {
-			r.children[groupOp.getRouterGroup()] = true
+			r.children[groupOp.getRouter()] = true
 			continue
 		}
 
@@ -64,7 +64,6 @@ func (r *Router) register(parent *gin.RouterGroup) {
 	for _, op := range r.operators {
 		// 通过反射获取 path
 		path := routePath(op)
-
 		// 通过断言接口获取 path
 		if path == "" {
 			h, ok := op.(PathOperator)
@@ -74,7 +73,12 @@ func (r *Router) register(parent *gin.RouterGroup) {
 
 			path = h.Path()
 		}
-		r.ginRG.Handle(op.Method(), path, r.handle(op))
+
+		mop, ok := op.(MethodOperator)
+		if !ok {
+			continue
+		}
+		r.ginRG.Handle(mop.Method(), path, r.handle(op))
 	}
 
 	for child := range r.children {
@@ -83,7 +87,7 @@ func (r *Router) register(parent *gin.RouterGroup) {
 }
 
 // handle 处理业务逻辑， 在 gin 中注册路由
-func (r *Router) handle(op LogicOperator) func(*gin.Context) {
+func (r *Router) handle(op Operator) func(*gin.Context) {
 
 	return func(c *gin.Context) {
 
