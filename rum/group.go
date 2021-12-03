@@ -24,6 +24,9 @@ type RouterGroup struct {
 	// 子路由
 	children map[*RouterGroup]bool
 
+	// 其他
+	parent *RouterGroup
+
 	// 接口实现
 	Operator
 }
@@ -59,10 +62,11 @@ func (r *RouterGroup) Register(ops ...Operator) {
 }
 
 // register 遍历子节点并初始化
-func (r *RouterGroup) register(parent *gin.RouterGroup) {
+func (r *RouterGroup) register(parent *RouterGroup) {
+	r.parent = parent
 
 	// 注册子路由组
-	r.ginRG = parent.Group(r.path)
+	r.ginRG = r.parent.ginRG.Group(r.path)
 
 	for _, op := range r.operators {
 		// 添加中间件
@@ -75,7 +79,7 @@ func (r *RouterGroup) register(parent *gin.RouterGroup) {
 	}
 
 	for child := range r.children {
-		child.register(r.ginRG)
+		child.register(r)
 	}
 }
 

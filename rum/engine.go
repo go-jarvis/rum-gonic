@@ -39,5 +39,8 @@ func (e *Engine) Run(addrs ...string) error {
 }
 
 func (e *Engine) register() {
-	e.RouterGroup.register(&e.engine.RouterGroup)
+	root := &RouterGroup{
+		ginRG: &e.engine.RouterGroup,
+	}
+	e.RouterGroup.register(root)
 }
