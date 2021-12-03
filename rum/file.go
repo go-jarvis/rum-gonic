@@ -41,7 +41,7 @@ func NewStaticFile(method, path, filepath string) *StaticFile {
 	}
 }
 
-func (r *RouterGroup) RegisterFile(path, filepath string) {
+func (r *RouterGroup) StaticFile(path, filepath string) {
 	for _, method := range []string{http.MethodGet, http.MethodHead} {
 		op := NewStaticFile(method, path, filepath)
 
