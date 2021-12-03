@@ -120,10 +120,10 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 		ret, err := op.Output(c)
 		if err != nil {
-			c.JSON(500, err.Error())
+			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		c.JSON(200, ret)
+		c.JSON(http.StatusOK, ret)
 	}
 }
