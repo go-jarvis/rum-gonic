@@ -6,7 +6,8 @@ import (
 )
 
 type Index struct {
-	httpx.MethodGet `path:"/index"`
+	httpx.MethodGet `path:"/indexmethod"`
+	Name            string `query:"name"`
 }
 
 func (index *Index) Output(c *gin.Context) (interface{}, error) {
