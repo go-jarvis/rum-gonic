@@ -63,6 +63,9 @@ func (r *RouterGroup) Register(ops ...Operator) {
 
 // register 遍历子节点并初始化
 func (r *RouterGroup) register(parent *RouterGroup) {
+	if r == parent {
+		panic("自己不能注册自己")
+	}
 	r.parent = parent
 
 	// 注册子路由组
