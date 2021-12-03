@@ -22,6 +22,9 @@ func main() {
 
 	r.StaticFile("/user", "user.html")
 
+	// r.Static("/userindex", "userindex")
+	r.Static("/userindex", "/data/gopath/src/github.com/tangx/rum-gonic/userindex")
+
 	if err := r.Run(); err != nil {
 		panic(err)
 	}

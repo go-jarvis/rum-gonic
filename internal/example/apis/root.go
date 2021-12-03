@@ -19,6 +19,7 @@ func init() {
 		// rum handler mode
 		RouterV0.Register(&pingpong.PingPong{})
 		RouterV0.Register(&index.Index{})
+		RouterV0.Static("/user", "userindex")
 
 	}
 }

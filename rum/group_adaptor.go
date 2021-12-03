@@ -7,5 +7,3 @@ func (r *RouterGroup) Use(fns ...HandlerFunc) {
 		r.operators = append(r.operators, mid)
 	}
 }
-
-func (r *RouterGroup) StatisFile() {}
