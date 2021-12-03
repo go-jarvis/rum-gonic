@@ -1,0 +1,10 @@
+
+### GET
+GET http://127.0.0.1:8080/rum/v0/ping/zhangsan?age=20
+
+### GET index
+GET http://127.0.0.1:8080/index
+
+
+### GET v0/ping
+GET http://127.0.0.1:8080/v0/ping/wangwu?age=102
