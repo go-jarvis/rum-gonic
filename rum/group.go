@@ -8,49 +8,51 @@ import (
 )
 
 // 接口检查
-// var _ Operator = (*Router)(nil)
-var _ GroupOperator = (*Router)(nil)
+var _ Operator = (*RouterGroup)(nil)
+var _ GroupOperator = (*RouterGroup)(nil)
 
-type Router struct {
+type GroupOperator interface {
+	RouterGroup() *RouterGroup
+}
+
+type RouterGroup struct {
 	// 当前路由
 	path      string
 	ginRG     *gin.RouterGroup
 	operators []Operator
 
 	// 子路由
-	children map[*Router]bool
+	children map[*RouterGroup]bool
 
 	// 接口实现
 	Operator
 }
 
-func NewRouterGroup(path string) *Router {
-	return &Router{
+func NewRouterGroup(path string) *RouterGroup {
+	return &RouterGroup{
 		path:      path,
-		children:  make(map[*Router]bool),
+		children:  make(map[*RouterGroup]bool),
 		operators: make([]Operator, 0),
 	}
 }
 
-// getRouter 实现 GroupOperator interface
-func (r *Router) getRouter() *Router {
+// RouterGroup 实现 GroupOperator interface
+func (r *RouterGroup) RouterGroup() *RouterGroup {
 	return r
 }
 
 // Register 添加子 router group 或 logic router
-func (r *Router) Register(ops ...Operator) {
-
-	// if r.operators == nil {
-	// 	r.operators = make([]LogicOperator, 0)
-	// }
+func (r *RouterGroup) Register(ops ...Operator) {
 
 	for _, op := range ops {
+		// 加入 子路由
 		if groupOp, ok := op.(GroupOperator); ok {
-			r.children[groupOp.getRouter()] = true
+			r.children[groupOp.RouterGroup()] = true
 			continue
 		}
 
-		if logicOp, ok := op.(LogicOperator); ok {
+		// 加入 middleware operator 或 logic operator
+		if logicOp, ok := op.(Operator); ok {
 			r.operators = append(r.operators, logicOp)
 		}
 	}
@@ -58,10 +60,19 @@ func (r *Router) Register(ops ...Operator) {
 }
 
 // register 遍历子节点并初始化
-func (r *Router) register(parent *gin.RouterGroup) {
+func (r *RouterGroup) register(parent *gin.RouterGroup) {
 
+	// 注册子路由组
 	r.ginRG = parent.Group(r.path)
+
+	// ginfuncs := make([]gin.HandlerFunc, 0)
 	for _, op := range r.operators {
+		// 添加中间件
+		if mid, ok := op.(MiddlewareOperator); ok {
+			r.ginRG.Use(mid.MiddlewareFunc())
+			continue
+		}
+
 		// 通过反射获取 path
 		path := routePath(op)
 		// 通过断言接口获取 path
@@ -78,6 +89,7 @@ func (r *Router) register(parent *gin.RouterGroup) {
 		if !ok {
 			continue
 		}
+
 		r.ginRG.Handle(mop.Method(), path, r.handle(op))
 	}
 
@@ -87,7 +99,7 @@ func (r *Router) register(parent *gin.RouterGroup) {
 }
 
 // handle 处理业务逻辑， 在 gin 中注册路由
-func (r *Router) handle(op Operator) func(*gin.Context) {
+func (r *RouterGroup) handle(op Operator) HandlerFunc {
 
 	return func(c *gin.Context) {
 

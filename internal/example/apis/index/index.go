@@ -6,7 +6,7 @@ import (
 )
 
 type Index struct {
-	httpx.MethodGet `path:"/indexmethod"`
+	httpx.MethodGet `path:"/index"`
 	Name            string `query:"name"`
 }
 
