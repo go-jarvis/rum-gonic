@@ -7,93 +7,93 @@ import (
 	"github.com/tangx/ginbinder"
 )
 
-// 结构检查
-var _ Handler = (*RouterGroup)(nil)
-var _ GroupHandler = (*RouterGroup)(nil)
+// 接口检查
+var _ Operator = (*Router)(nil)
+var _ GroupOperator = (*Router)(nil)
 
-type RouterGroup struct {
-	*gin.RouterGroup
+type Router struct {
+	ginRG *gin.RouterGroup
 
-	path     string
-	children map[*RouterGroup]bool
-	handlers []LogicHandler
+	path      string
+	children  map[*Router]bool
+	operators []LogicOperator
 }
 
-func NewRouterGroup(path string) *RouterGroup {
-	return &RouterGroup{
-		path:     path,
-		children: make(map[*RouterGroup]bool),
-		handlers: make([]LogicHandler, 0),
+func NewRouterGroup(path string) *Router {
+	return &Router{
+		path:      path,
+		children:  make(map[*Router]bool),
+		operators: make([]LogicOperator, 0),
 	}
 }
 
-// Output 实现 Handler interface
-func (g *RouterGroup) Output(c *gin.Context) (interface{}, error) {
+// Output 实现 Operator interface
+func (r *Router) Output(c *gin.Context) (interface{}, error) {
 	return nil, nil
 }
 
-// GroupHandler 实现 GroupHandler interface
-func (g *RouterGroup) getRouterGroup() *RouterGroup {
-	return g
+// getRouterGroup 实现 GroupOperator interface
+func (r *Router) getRouterGroup() *Router {
+	return r
 }
 
 // Register 添加子 router group 或 logic router
-func (g *RouterGroup) Register(handlers ...Handler) {
+func (r *Router) Register(ops ...Operator) {
 
-	if g.handlers == nil {
-		g.handlers = make([]LogicHandler, 0)
+	if r.operators == nil {
+		r.operators = make([]LogicOperator, 0)
 	}
 
-	for _, handler := range handlers {
-		if ghandler, ok := handler.(GroupHandler); ok {
-			g.children[ghandler.getRouterGroup()] = true
+	for _, op := range ops {
+		if groupOp, ok := op.(GroupOperator); ok {
+			r.children[groupOp.getRouterGroup()] = true
 			continue
 		}
 
-		if lhandler, ok := handler.(LogicHandler); ok {
-			g.handlers = append(g.handlers, lhandler)
+		if logicOp, ok := op.(LogicOperator); ok {
+			r.operators = append(r.operators, logicOp)
 		}
 	}
 
 }
 
 // register 遍历子节点并初始化
-func (g *RouterGroup) register(parent *gin.RouterGroup) {
+func (r *Router) register(parent *gin.RouterGroup) {
 
-	g.RouterGroup = parent.Group(g.path)
-	for _, handler := range g.handlers {
+	r.ginRG = parent.Group(r.path)
+	for _, op := range r.operators {
 		// 通过反射获取 path
-		path := handlerPath(handler)
+		path := routePath(op)
 
 		// 通过断言接口获取 path
 		if path == "" {
-			h, ok := handler.(PathHandler)
+			h, ok := op.(PathOperator)
 			if !ok {
 				continue
 			}
 
 			path = h.Path()
 		}
-		g.RouterGroup.Handle(handler.Method(), path, g.handle(handler))
+		r.ginRG.Handle(op.Method(), path, r.handle(op))
 	}
 
-	for child := range g.children {
-		child.register(g.RouterGroup)
+	for child := range r.children {
+		child.register(r.ginRG)
 	}
 }
 
 // handle 处理业务逻辑， 在 gin 中注册路由
-func (g *RouterGroup) handle(handler LogicHandler) func(*gin.Context) {
+func (r *Router) handle(op LogicOperator) func(*gin.Context) {
 
 	return func(c *gin.Context) {
 
-		err := ginbinder.ShouldBindRequest(c, handler)
+		err := ginbinder.ShouldBindRequest(c, op)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		ret, err := handler.Output(c)
+		ret, err := op.Output(c)
 		if err != nil {
 			c.JSON(500, err.Error())
 			return

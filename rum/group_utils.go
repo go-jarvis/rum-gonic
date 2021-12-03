@@ -2,7 +2,7 @@ package rum
 
 import "reflect"
 
-func handlerPath(v interface{}) string {
+func routePath(v interface{}) string {
 	rv := reflect.Indirect(reflect.ValueOf(v))
 
 	rt := rv.Type()

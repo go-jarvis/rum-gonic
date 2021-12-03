@@ -2,19 +2,19 @@ package rum
 
 import "github.com/gin-gonic/gin"
 
-type PathHandler interface {
+type PathOperator interface {
 	Path() string
 }
 
-type LogicHandler interface {
+type LogicOperator interface {
 	Method() string
-	Handler
+	Operator
 }
 
-type GroupHandler interface {
-	getRouterGroup() *RouterGroup
+type GroupOperator interface {
+	getRouterGroup() *Router
 }
 
-type Handler interface {
+type Operator interface {
 	Output(*gin.Context) (interface{}, error)
 }

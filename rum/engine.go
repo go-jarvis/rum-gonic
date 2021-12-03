@@ -5,9 +5,9 @@ import (
 )
 
 type Engine struct {
-	*gin.Engine
+	engine *gin.Engine
 
-	*RouterGroup
+	*Router
 }
 
 // Default 默认 gin.Engine
@@ -23,8 +23,8 @@ func New(r *gin.Engine) *Engine {
 	root := NewRouterGroup("/")
 
 	e := &Engine{
-		Engine:      r,
-		RouterGroup: root,
+		engine: r,
+		Router: root,
 	}
 
 	return e
@@ -36,9 +36,9 @@ func (e *Engine) Run(addrs ...string) error {
 	// e.RouterGroup.initial(e.RouterGroup)
 	e.register()
 
-	return e.Engine.Run(addrs...)
+	return e.engine.Run(addrs...)
 }
 
 func (e *Engine) register() {
-	e.RouterGroup.register(&e.Engine.RouterGroup)
+	e.Router.register(&e.engine.RouterGroup)
 }
