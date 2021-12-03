@@ -20,8 +20,5 @@ func init() {
 		RouterV0.Register(&pingpong.PingPong{})
 		RouterV0.Register(&index.Index{})
 
-		// gin handler
-		// RouterV0.GET("/gg", handlers.GGHandler)
 	}
-
 }

@@ -11,12 +11,18 @@ type Index struct {
 }
 
 func (index *Index) Output(c *gin.Context) (interface{}, error) {
+	return logic(index), nil
+}
+
+func logic(index *Index) map[string]string {
 	return map[string]string{
 		"code":    "200",
 		"message": "index.html",
-	}, nil
+		"name":    index.Name,
+	}
 }
 
+/* 嵌套了 httpx.MethodXXX 和 path tag， 以下不需要 */
 // func (*Index) Method() string {
 // 	return http.MethodGet
 // }

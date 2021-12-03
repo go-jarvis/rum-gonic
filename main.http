@@ -3,7 +3,7 @@
 GET http://127.0.0.1:8080/rum/v0/ping/zhangsan?age=20
 
 ### GET index
-GET http://127.0.0.1:8080/index
+GET http://127.0.0.1:8080/index?name=zhangsan
 
 
 ### GET v0/ping
