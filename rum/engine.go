@@ -44,3 +44,11 @@ func (e *Engine) register() {
 	}
 	e.RouterGroup.register(root)
 }
+
+func (e *Engine) WithContextInjectors(injectors ...ContextInjector) *Engine {
+	for _, injector := range injectors {
+		withContext(injector.Key(), injector.Value())
+	}
+
+	return e
+}

@@ -1,8 +1,12 @@
 package index
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tangx/rum-gonic/httpx"
+	"github.com/tangx/rum-gonic/internal/example/injector/redis"
 )
 
 type Index struct {
@@ -11,14 +15,19 @@ type Index struct {
 }
 
 func (index *Index) Output(c *gin.Context) (interface{}, error) {
-	return logic(index), nil
+
+	return logic(c, index), nil
 }
 
-func logic(index *Index) map[string]string {
+func logic(ctx context.Context, index *Index) map[string]string {
+
+	ra := redis.FromRedisAgentOnline(ctx)
+
 	return map[string]string{
-		"code":    "200",
-		"message": "index.html",
-		"name":    index.Name,
+		"redis-agent": fmt.Sprintf("%s:%d", ra.Addr, ra.Port),
+		"code":        "200",
+		"message":     "index.html",
+		"name":        index.Name,
 	}
 }
 
