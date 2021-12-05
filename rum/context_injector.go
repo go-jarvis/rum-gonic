@@ -71,5 +71,5 @@ func typeName(v interface{}) string {
 	rt := reflect.TypeOf(v)
 	rt = deReflectType(rt)
 
-	return rt.Name()
+	return fmt.Sprintf("%s.%s", rt.PkgPath(), rt.Name())
 }
