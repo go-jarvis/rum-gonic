@@ -126,10 +126,8 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 		}
 
 		// inject 注入
-		if withContextOperators != nil {
-			for k, v := range withContextOperators {
-				c.Set(k, v)
-			}
+		for _, injector := range contextInjectors {
+			_ = injector(c)
 		}
 
 		ret, err := op.Output(c)

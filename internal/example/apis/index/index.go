@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/httpx"
 	"github.com/tangx/rum-gonic/internal/example/injector/redis"
+	"github.com/tangx/rum-gonic/pkg/httpx"
 )
 
 type Index struct {

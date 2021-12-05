@@ -4,15 +4,16 @@ import (
 	"github.com/tangx/rum-gonic/internal/example/apis"
 	"github.com/tangx/rum-gonic/internal/example/apis/index"
 	"github.com/tangx/rum-gonic/internal/example/injector/redis"
-	"github.com/tangx/rum-gonic/middlewares"
+	"github.com/tangx/rum-gonic/pkg/middlewares"
+
 	"github.com/tangx/rum-gonic/rum"
 )
 
 func main() {
 
 	r := rum.Default()
-	r.WithContextInjectors(
-		redis.RedisOnlineInjector,
+	r.WithContextCompose(
+		redis.WithRedisInject(),
 	)
 
 	// 注册中间件
