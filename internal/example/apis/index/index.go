@@ -2,7 +2,6 @@ package index
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tangx/rum-gonic/internal/example/injector/redis"
@@ -24,7 +23,7 @@ func logic(ctx context.Context, index *Index) map[string]string {
 	ra := redis.FromRedisAgentOnline(ctx)
 
 	return map[string]string{
-		"redis-agent": fmt.Sprintf("%s:%d", ra.Addr, ra.Port),
+		"redis-agent": ra.ServerAddr(),
 		"code":        "200",
 		"message":     "index.html",
 		"name":        index.Name,

@@ -46,9 +46,11 @@ func (e *Engine) register() {
 }
 
 // WithContextCompose 添加注入控制器
-func (e *Engine) WithContextCompose(injectors ...ContextInjectorFunc) {
+func (e *Engine) WithContextCompose(injectors ...ContextInjectorFunc) *Engine {
 	if contextInjectors == nil {
 		contextInjectors = make([]ContextInjectorFunc, 0)
 	}
 	contextInjectors = append(contextInjectors, injectors...)
+
+	return e
 }
