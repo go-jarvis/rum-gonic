@@ -4,7 +4,7 @@ GET http://127.0.0.1:8080/rum/v0/ping/zhangsan?age=20
 
 ### GET index
 GET http://127.0.0.1:8080/index?name=zhangsan
-
+# Authorization: Basic user1:tangxin
 
 ### GET v0/ping
 GET http://127.0.0.1:8080/v0/ping/wangwu?age=102
@@ -12,3 +12,9 @@ GET http://127.0.0.1:8080/v0/ping/wangwu?age=102
 
 ### user
 GET http://127.0.0.1:8080/index
+
+
+
+### Get /v0/index
+GET http://127.0.0.1:8080/v0/index?name=zhangsan
+Authorization: Basic user1:tangxin

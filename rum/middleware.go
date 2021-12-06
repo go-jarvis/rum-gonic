@@ -6,6 +6,7 @@ import (
 
 type MiddlewareOperator interface {
 	MiddlewareFunc() HandlerFunc
+	Operator
 }
 
 // 接口检查
@@ -14,7 +15,7 @@ var _ MiddlewareOperator = (*Middleware)(nil)
 
 type Middleware struct {
 	middwareFunc HandlerFunc
-	Operator
+	// Operator
 }
 
 type HandlerFunc = gin.HandlerFunc
@@ -28,4 +29,8 @@ func NewMiddleware(fn HandlerFunc) *Middleware {
 func (mid *Middleware) MiddlewareFunc() HandlerFunc {
 	// fmt.Println("注册中间件咯")
 	return mid.middwareFunc
+}
+
+func (mid *Middleware) Output(c *gin.Context) (interface{}, error) {
+	return nil, nil
 }

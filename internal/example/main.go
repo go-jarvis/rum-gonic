@@ -17,7 +17,8 @@ func main() {
 	)
 
 	// 注册中间件
-	r.Register(middlewares.NoCacheIndex())
+	r.Register(middlewares.DefaultNoCacheIndex())
+	// r.Register(auth.AdminUsers)
 
 	// 添加路由组 / 路由
 	r.Register(apis.RouterRoot)

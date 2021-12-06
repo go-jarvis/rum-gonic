@@ -5,14 +5,14 @@ import (
 	"github.com/tangx/rum-gonic/rum"
 )
 
-func NoCacheIndex() *rum.Middleware {
+func DefaultNoCacheIndex() rum.MiddlewareOperator {
 
 	pages := []string{"/", "/index", "index.html"}
 
 	return NoCahe(pages)
 }
 
-func NoCahe(pages []string) *rum.Middleware {
+func NoCahe(pages []string) rum.MiddlewareOperator {
 
 	mid := func(c *gin.Context) {
 		path := c.Request.URL.Path

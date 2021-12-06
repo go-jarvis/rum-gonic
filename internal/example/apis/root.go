@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"github.com/tangx/rum-gonic/internal/example/apis/auth"
 	"github.com/tangx/rum-gonic/internal/example/apis/index"
 	"github.com/tangx/rum-gonic/internal/example/apis/pingpong"
 	"github.com/tangx/rum-gonic/rum"
@@ -16,6 +17,7 @@ func init() {
 	RouterRoot.Register(RouterV0)
 
 	{
+		RouterV0.Register(auth.AdminUsersMiddelware)
 		// rum handler mode
 		RouterV0.Register(&pingpong.PingPong{})
 		RouterV0.Register(&index.Index{})
