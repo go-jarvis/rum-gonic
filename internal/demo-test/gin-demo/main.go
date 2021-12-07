@@ -10,7 +10,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	r.Static("/root", "/data/gopath/src/github.com/tangx/rum-gonic/userindex")
+	r.Static("/root", "/data/gopath/src/github.com/go-jarvis/rum-gonic/userindex")
 
 	r.GET("/index", handler)
 	_ = r.Run(":8080")

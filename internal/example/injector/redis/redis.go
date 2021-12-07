@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/tangx/rum-gonic/rum"
+	"github.com/go-jarvis/rum-gonic/rum"
 )
 
 /* 定义 */

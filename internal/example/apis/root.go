@@ -1,10 +1,10 @@
 package apis
 
 import (
-	"github.com/tangx/rum-gonic/internal/example/apis/index"
-	"github.com/tangx/rum-gonic/internal/example/apis/pingpong"
-	"github.com/tangx/rum-gonic/internal/example/auth"
-	"github.com/tangx/rum-gonic/rum"
+	"github.com/go-jarvis/rum-gonic/internal/example/apis/index"
+	"github.com/go-jarvis/rum-gonic/internal/example/apis/pingpong"
+	"github.com/go-jarvis/rum-gonic/internal/example/auth"
+	"github.com/go-jarvis/rum-gonic/rum"
 )
 
 var (

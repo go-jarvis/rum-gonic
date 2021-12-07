@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/internal/example/injector/redis"
-	"github.com/tangx/rum-gonic/pkg/httpx"
+	"github.com/go-jarvis/rum-gonic/internal/example/injector/redis"
+	"github.com/go-jarvis/rum-gonic/pkg/httpx"
 )
 
 type Index struct {

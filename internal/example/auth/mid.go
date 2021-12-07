@@ -1,6 +1,6 @@
 package auth
 
-import "github.com/tangx/rum-gonic/pkg/middlewares"
+import "github.com/go-jarvis/rum-gonic/pkg/middlewares"
 
 var AdminUsersMiddelware = middlewares.BasicAuth(map[string]string{
 	"user1": "tangxin",

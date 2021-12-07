@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/tangx/rum-gonic/internal/example/apis"
-	"github.com/tangx/rum-gonic/internal/example/apis/index"
-	"github.com/tangx/rum-gonic/internal/example/injector/redis"
-	"github.com/tangx/rum-gonic/pkg/middlewares"
+	"github.com/go-jarvis/rum-gonic/internal/example/apis"
+	"github.com/go-jarvis/rum-gonic/internal/example/apis/index"
+	"github.com/go-jarvis/rum-gonic/internal/example/injector/redis"
+	"github.com/go-jarvis/rum-gonic/pkg/middlewares"
 
-	"github.com/tangx/rum-gonic/rum"
+	"github.com/go-jarvis/rum-gonic/rum"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 	r.StaticFile("/user", "user.html")
 
 	// r.Static("/userindex", "userindex")
-	r.Static("/userindex", "/data/gopath/src/github.com/tangx/rum-gonic/userindex")
+	r.Static("/userindex", "/data/gopath/src/github.com/go-jarvis/rum-gonic/userindex")
 
 	/* 启动方式 */
 	// 1. 普通方式启动

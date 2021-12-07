@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/rum"
+	"github.com/go-jarvis/rum-gonic/rum"
 )
 
 func BasicAuth(accounts gin.Accounts) rum.MiddlewareOperator {

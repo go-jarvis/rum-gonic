@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/rum"
+	"github.com/go-jarvis/rum-gonic/rum"
 )
 
 // DefaultCorsPolicy 默认跨域规则， 所有来源
