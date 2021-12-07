@@ -5,6 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.1.4](https://github.com/tangx/rum-gonic/compare/v0.1.3...v0.1.4)
+
+### Bug Fixes
+
+* **fix** listen addr bug ([6150195](https://github.com/tangx/rum-gonic/commit/6150195fa9232d41d9e4bfc73291c3ec6a0ad714))
+
+
+
 # [0.1.3](https://github.com/tangx/rum-gonic/compare/v0.1.2...v0.1.3)
 
 ### Bug Fixes
