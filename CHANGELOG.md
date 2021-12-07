@@ -5,6 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.1.3](https://github.com/tangx/rum-gonic/compare/v0.1.2...v0.1.3)
+
+### Bug Fixes
+
+* **fix** 增加 listenAndServe 启动 和 shutdown 关闭 ([fd04e19](https://github.com/tangx/rum-gonic/commit/fd04e19befdf455e08d60dc11631ceb1056b5045))
+
+
+
 # [0.1.2](https://github.com/tangx/rum-gonic/compare/v0.1.1...v0.1.2)
 
 ### Bug Fixes
