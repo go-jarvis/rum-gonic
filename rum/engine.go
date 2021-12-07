@@ -3,6 +3,7 @@ package rum
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -65,13 +66,15 @@ func (e *Engine) Run(addrs ...string) error {
 func (e *Engine) ListenAndServe(addrs ...string) error {
 	e.register()
 
+	address := addr(addrs...)
 	if e.srv == nil {
 		e.srv = &http.Server{
-			Addr:    addr(addrs...),
+			Addr:    address,
 			Handler: e.engine,
 		}
 	}
 
+	log.Printf("[Rum] Listening and serving HTTP on %s\n", address)
 	err := e.srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		return err
