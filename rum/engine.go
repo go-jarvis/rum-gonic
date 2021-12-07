@@ -93,5 +93,5 @@ func addr(addrs ...string) string {
 		return ":8080"
 	}
 
-	return addrs[1]
+	return addrs[0]
 }
