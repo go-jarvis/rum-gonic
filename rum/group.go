@@ -12,7 +12,7 @@ var _ Operator = (*RouterGroup)(nil)
 var _ GroupOperator = (*RouterGroup)(nil)
 
 type GroupOperator interface {
-	RouterGroup() *RouterGroup
+	routerGroup() *RouterGroup
 }
 
 type RouterGroup struct {
@@ -40,7 +40,7 @@ func NewRouterGroup(path string) *RouterGroup {
 }
 
 // RouterGroup 实现 GroupOperator interface
-func (r *RouterGroup) RouterGroup() *RouterGroup {
+func (r *RouterGroup) routerGroup() *RouterGroup {
 	return r
 }
 
@@ -50,7 +50,7 @@ func (r *RouterGroup) Register(ops ...Operator) {
 	for _, op := range ops {
 		// 加入 子路由
 		if groupOp, ok := op.(GroupOperator); ok {
-			r.children[groupOp.RouterGroup()] = true
+			r.children[groupOp.routerGroup()] = true
 			continue
 		}
 
