@@ -5,6 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.2.1](https://github.com/go-jarvis/rum-gonic/compare/v0.2.0...v0.2.1)
+
+### Bug Fixes
+
+* **fix** 修改 groupOperator 的方法为小些，内部方法 ([73fd9ac](https://github.com/go-jarvis/rum-gonic/commit/73fd9ac770263b0c47294b0e3943dcb720024c04))
+
+
+
 # [0.1.4](https://github.com/tangx/rum-gonic/compare/v0.1.3...v0.1.4)
 
 ### Bug Fixes
