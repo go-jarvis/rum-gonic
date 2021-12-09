@@ -5,6 +5,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.3.0](https://github.com/go-jarvis/rum-gonic/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **feat** 支持 any 和 自定义 multi 方法 ([71b416b](https://github.com/go-jarvis/rum-gonic/commit/71b416b625caee281b6a8a4d38b53d33e1662adf))
+* **feat** 支持多路由方法 ([bf31c58](https://github.com/go-jarvis/rum-gonic/commit/bf31c58bc82da228884e41a2b6570751382a48b4))
+
+
+
 # [0.2.1](https://github.com/go-jarvis/rum-gonic/compare/v0.2.0...v0.2.1)
 
 ### Bug Fixes
