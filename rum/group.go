@@ -2,8 +2,10 @@ package rum
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-jarvis/rum-gonic/pkg/httpx"
 	"github.com/tangx/ginbinder"
 )
 
@@ -110,7 +112,11 @@ func (r *RouterGroup) hanlde(op Operator) bool {
 
 	mop := op.(MethodOperator)
 
-	r.ginRG.Handle(mop.Method(), path, r.handlerfunc(op))
+	for _, method := range httpx.UnmarshalMethods(mop.Method()) {
+		method = strings.TrimSpace(method)
+		r.ginRG.Handle(method, path, r.handlerfunc(op))
+	}
+
 	return true
 }
 

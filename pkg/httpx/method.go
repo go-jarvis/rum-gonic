@@ -1,6 +1,9 @@
 package httpx
 
-import net_http "net/http"
+import (
+	net_http "net/http"
+	"strings"
+)
 
 type Method struct {
 }
@@ -57,4 +60,19 @@ type MethodTrace struct{}
 
 func (MethodTrace) Method() string {
 	return net_http.MethodTrace
+}
+
+type MethodMulti struct {
+	Routes []string
+}
+
+func (m MethodMulti) Method() string {
+	return MarshalMethods(m.Routes)
+}
+
+func MarshalMethods(ms []string) string {
+	return strings.Join(ms, ",")
+}
+func UnmarshalMethods(str string) []string {
+	return strings.Split(str, ",")
 }
