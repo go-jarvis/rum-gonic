@@ -5,7 +5,8 @@ import (
 )
 
 func routePath(v interface{}) string {
-	rv := reflect.Indirect(reflect.ValueOf(v))
+	rv := reflect.ValueOf(v)
+	rv = reflect.Indirect(rv)
 
 	rt := rv.Type()
 	for i := 0; i < rv.NumField(); i++ {
@@ -20,6 +21,18 @@ func routePath(v interface{}) string {
 
 		// 反射类型查找 tag
 		ft := rt.Field(i)
+
+		// 反射拿到 methods tag
+		if methods, ok := ft.Tag.Lookup("methods"); ok {
+
+			ffv := fv.FieldByName("Methods")
+			if ffv.IsValid() && ffv.IsZero() {
+
+				ffv.Set(reflect.ValueOf(methods))
+			}
+		}
+
+		// 寻找路径
 		if val, ok := ft.Tag.Lookup("path"); ok {
 			return val
 		}

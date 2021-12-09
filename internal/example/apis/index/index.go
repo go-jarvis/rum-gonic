@@ -5,13 +5,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/internal/example/injector/redis"
+	"github.com/go-jarvis/rum-gonic/pkg/httpx"
 )
 
 type Index struct {
-	// httpx.MethodGet `path:"/index"`
+	// httpx.MethodGet `path:"/index" methods:"HEAD"`
 
-	// httpx.MethodRoutes `path:"/index"`
-	Name string `query:"name"`
+	httpx.MethodMulti `path:"/index" methods:"GET,HEAD"`
+	Name              string `query:"name"`
 }
 
 // func (index *Index) Method() string {

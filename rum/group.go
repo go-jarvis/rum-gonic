@@ -114,6 +114,10 @@ func (r *RouterGroup) hanlde(op Operator) bool {
 
 	for _, method := range httpx.UnmarshalMethods(mop.Method()) {
 		method = strings.TrimSpace(method)
+		// 有错就要报，免得找不到
+		// if len(method) == 0 {
+		// 	continue
+		// }
 		r.ginRG.Handle(method, path, r.handlerfunc(op))
 	}
 

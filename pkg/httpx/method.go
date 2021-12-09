@@ -63,11 +63,11 @@ func (MethodTrace) Method() string {
 }
 
 type MethodMulti struct {
-	Routes []string
+	Methods string
 }
 
 func (m MethodMulti) Method() string {
-	return MarshalMethods(m.Routes)
+	return m.Methods
 }
 
 func MarshalMethods(ms []string) string {
