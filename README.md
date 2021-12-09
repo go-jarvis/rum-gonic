@@ -34,8 +34,9 @@ import (
 )
 
 type Index struct {
-	httpx.MethodGet `path:"/index"`
-	Name            string `query:"name"`
+	// httpx.MethodAny `path:"/index.any"`
+	httpx.MethodMulti `path:"/index" methods:"GET,HEAD"`
+	Name              string `query:"name"`
 }
 
 func (index *Index) Output(c *gin.Context) (interface{}, error) {
