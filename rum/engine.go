@@ -44,8 +44,8 @@ func (e *Engine) register() {
 	e.RouterGroup.register(root)
 }
 
-// WithContextCompose 添加注入控制器
-func (e *Engine) WithContextCompose(injectors ...ContextInjectorFunc) *Engine {
+// WithContextInjectors 添加注入控制器
+func (e *Engine) WithContextInjectors(injectors ...ContextInjectorFunc) *Engine {
 	if contextInjectors == nil {
 		contextInjectors = make([]ContextInjectorFunc, 0)
 	}

@@ -16,9 +16,9 @@ var contextInjectors []ContextInjectorFunc
 
 type ContextInjectorFunc func(ctx context.Context) context.Context
 
-// WithContextValue 将 key, value 注入到 context 中。 同 context.WithValue(ctx, key, value)
+// InjectContextValueWith 将 key, value 注入到 context 中。 同 context.WithValue(ctx, key, value)
 // 由于 gin 中 context.Keys = map[string]interface{} , 只能使用 string 作为 key， 因此在保存先进行转换成带类型的值， 降低冲突。
-func WithContextValue(key, value interface{}) ContextInjectorFunc {
+func InjectContextValueWith(key, value interface{}) ContextInjectorFunc {
 
 	_key := keyAsString(key)
 
@@ -32,8 +32,8 @@ func WithContextValue(key, value interface{}) ContextInjectorFunc {
 	}
 }
 
-// FromContextValue 从 context 中获取对应的值。 同 context.Value(key)。
-func FromContextValue(ctx context.Context, key interface{}) interface{} {
+// InjectedContextValueFrom 从 context 中获取对应的值。 同 context.Value(key)。
+func InjectedContextValueFrom(ctx context.Context, key interface{}) interface{} {
 	_key := keyAsString(key)
 	return ctx.Value(_key)
 }

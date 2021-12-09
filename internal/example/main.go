@@ -16,7 +16,7 @@ import (
 func main() {
 
 	r := rum.Default()
-	r.WithContextCompose(
+	r.WithContextInjectors(
 		redis.WithRedisInject(),
 	)
 
