@@ -29,7 +29,7 @@ func (static *StaticFile) Output(c *gin.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func NewStaticFile(method, path, filepath string) *StaticFile {
+func newStaticFile(method, path, filepath string) *StaticFile {
 	return &StaticFile{
 		method:   method,
 		path:     path,
@@ -41,7 +41,7 @@ func NewStaticFile(method, path, filepath string) *StaticFile {
 // router.StaticFile("favicon.ico", "./resources/favicon.ico")
 func (r *RouterGroup) StaticFile(path, filepath string) {
 	for _, method := range []string{http.MethodGet, http.MethodHead} {
-		op := NewStaticFile(method, path, filepath)
+		op := newStaticFile(method, path, filepath)
 
 		r.addOperators(op)
 	}
