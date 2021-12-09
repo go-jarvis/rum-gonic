@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"net/http"
 	net_http "net/http"
 	"strings"
 )
@@ -75,4 +76,22 @@ func MarshalMethods(ms []string) string {
 }
 func UnmarshalMethods(str string) []string {
 	return strings.Split(str, ",")
+}
+
+type MethodAny struct{}
+
+func (m MethodAny) Method() string {
+	return MarshalMethods(
+		[]string{
+			http.MethodConnect,
+			http.MethodDelete,
+			http.MethodGet,
+			http.MethodHead,
+			http.MethodOptions,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodTrace,
+		},
+	)
 }

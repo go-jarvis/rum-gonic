@@ -9,6 +9,7 @@ import (
 )
 
 type Index struct {
+	// httpx.MethodAny `path:"/index.any"`
 	httpx.MethodMulti `path:"/index" methods:"GET,HEAD"`
 	Name              string `query:"name"`
 }
