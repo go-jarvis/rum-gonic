@@ -5,6 +5,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.4.0](https://github.com/go-jarvis/rum-gonic/compare/v0.3.0...v0.4.0)
+
+### Bug Fixes
+
+* **fix** wrap binding request error by statuserros ([3b9cd61](https://github.com/go-jarvis/rum-gonic/commit/3b9cd61ee4ecc179832e30039454cd13a22a2c79))
+* **fix** handle statuserrors for  message in response ([5e7387e](https://github.com/go-jarvis/rum-gonic/commit/5e7387e597387b9f28b573c55b3c96f340935314))
+* **fix** 修改注入方法名称 ([30cf8a0](https://github.com/go-jarvis/rum-gonic/commit/30cf8a07bd92b579c8a9d14934ff4ff80723e007))
+
+
+### Features
+
+* **feat** supoort statuscode ([6d6e24e](https://github.com/go-jarvis/rum-gonic/commit/6d6e24eb60d4d5d9a7db38ae0a87a14f50eca038))
+
+
+
 # [0.3.0](https://github.com/go-jarvis/rum-gonic/compare/v0.2.1...v0.3.0)
 
 ### Features
