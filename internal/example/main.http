@@ -11,7 +11,7 @@ GET http://127.0.0.1:8080/v0/ping/wangwu?age=102
 
 
 ### user
-GET http://127.0.0.1:8080/index
+GET http://127.0.0.1:8080/index?e=data123
 
 
 

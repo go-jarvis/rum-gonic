@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/pkg/httpx"
+	"github.com/go-jarvis/statuserrors"
 	"github.com/tangx/ginbinder"
 )
 
@@ -131,7 +132,7 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 		err := ginbinder.ShouldBindRequest(c, op)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, err.Error())
+			r.output(c, nil, err)
 			return
 		}
 
@@ -147,15 +148,57 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 			return
 		}
 
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		c.JSON(http.StatusOK, ret)
+		r.output(c, ret, err)
 	}
 }
 
 func (r *RouterGroup) addOperators(ops ...Operator) {
 	r.operators = append(r.operators, ops...)
+}
+
+// output give response code and data
+// content-type is text/plain if data is string type, or content-type
+// is application/json by default. maybe it will support more
+// content types in feture.
+func (r *RouterGroup) output(c *gin.Context, data interface{}, err error) {
+	code, data := extract(data, err)
+
+	switch ret := data.(type) {
+	case string:
+		c.String(code, ret)
+	default:
+		c.JSON(code, ret)
+	}
+
+}
+
+// extract return http status code and output message,
+// no matter if error is nil,
+// if data is not nil, using data for output message, otherwise trying to use
+// error Error() message as output message
+func extract(data interface{}, err error) (code int, result interface{}) {
+
+	code, result = extractError(err)
+
+	if data != nil {
+		return code, data
+	}
+
+	return code, result
+}
+
+// extractError return http status code and error message
+// if err is not a status error, try to return statuserrors status code
+// and error message.
+func extractError(err error) (code int, msg string) {
+	if err == nil {
+		return http.StatusOK, ""
+	}
+
+	if e, ok := err.(statuserrors.StatusError); ok {
+		return e.StatusCode(), err.Error()
+	}
+
+	sterr := statuserrors.New(statuserrors.StatusUnknownError, err.Error())
+	return statuserrors.StatusUnknownError, sterr.Error()
 }
