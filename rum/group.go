@@ -132,6 +132,7 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 		err := ginbinder.ShouldBindRequest(c, op)
 		if err != nil {
+			err = statuserrors.Wrap(err, http.StatusBadRequest, BindingRequestError)
 			r.output(c, nil, err)
 			return
 		}
