@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/gin-gonic/gin v1.7.7
-	github.com/go-jarvis/statuserrors v0.1.0
+	github.com/go-jarvis/statuserrors v0.1.1
 	github.com/tangx/ginbinder v0.1.2
 )
 
@@ -27,5 +27,3 @@ require (
 	google.golang.org/protobuf v1.26.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/go-jarvis/statuserrors => /data/gopath/src/github.com/go-jarvis/statuserrors
