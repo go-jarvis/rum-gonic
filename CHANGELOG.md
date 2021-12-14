@@ -5,6 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.4.2](https://github.com/go-jarvis/rum-gonic/compare/v0.4.1...v0.4.2)
+
+### Bug Fixes
+
+* **fix** deepcopy operator, to fix all request share the same operator object problem ([0d72142](https://github.com/go-jarvis/rum-gonic/commit/0d721423e8f585e8a64a63f983d59f6ee79c7207))
+
+
+
 # [0.4.1](https://github.com/go-jarvis/rum-gonic/compare/v0.4.0...v0.4.1)
 
 ### Bug Fixes
