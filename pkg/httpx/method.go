@@ -63,6 +63,13 @@ func (MethodTrace) Method() string {
 	return net_http.MethodTrace
 }
 
+// MethodMulti return multiple kinds of methods
+//   use tag `method` to specify the methods
+// NOTE: rum-gonic will not convert lower-case to upper-case
+// example:
+//   type Index struct {
+//   	MethodMulti `path:"/index" methods:"GET,POST"`
+//   }
 type MethodMulti struct {
 	Methods string
 }
@@ -78,6 +85,16 @@ func UnmarshalMethods(str string) []string {
 	return strings.Split(str, ",")
 }
 
+// MethodAny return all kind of methods
+//    http.MethodConnect,
+//    http.MethodDelete,
+//    http.MethodGet,
+//    http.MethodHead,
+//    http.MethodOptions,
+//    http.MethodPost,
+//    http.MethodPut,
+//    http.MethodPatch,
+//    http.MethodTrace,
 type MethodAny struct{}
 
 func (m MethodAny) Method() string {
