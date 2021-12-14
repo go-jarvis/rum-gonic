@@ -102,13 +102,23 @@ func (r *RouterGroup) use(op Operator) bool {
 // handle 添加路由
 func (r *RouterGroup) hanlde(op Operator) bool {
 
-	// 通过反射获取 path
-	path := routePath(op)
+	path := ""
 
-	// 通过断言接口获取 path
-	if path == "" {
-		h := op.(PathOperator)
+	// user path method first. 通过断言接口获取 path
+	if h, ok := op.(PathOperator); path == "" && ok {
 		path = h.Path()
+	}
+
+	// if path is not provided by Path method, emtpy.
+	// try to get path value from tag by reflection
+	// user must provide a path value at least one ways
+	if path == "" {
+		p, err := routePath(op)
+		if err != nil {
+			panic(err)
+		}
+
+		path = p
 	}
 
 	mop := op.(MethodOperator)
@@ -132,7 +142,7 @@ func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 		err := ginbinder.ShouldBindRequest(c, op)
 		if err != nil {
-			err = statuserrors.Wrap(err, http.StatusBadRequest, BindingRequestError)
+			err = statuserrors.Wrap(err, http.StatusBadRequest, Err_BindingRequest)
 			r.output(c, nil, err)
 			return
 		}

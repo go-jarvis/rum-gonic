@@ -1,10 +1,11 @@
 package rum
 
 import (
+	"fmt"
 	"reflect"
 )
 
-func routePath(v interface{}) string {
+func routePath(v interface{}) (string, error) {
 	rv := reflect.ValueOf(v)
 	rv = reflect.Indirect(rv)
 
@@ -34,9 +35,9 @@ func routePath(v interface{}) string {
 
 		// 寻找路径
 		if val, ok := ft.Tag.Lookup("path"); ok {
-			return val
+			return val, nil
 		}
 
 	}
-	return ""
+	return "", fmt.Errorf(Err_NoPathProvide)
 }

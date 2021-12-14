@@ -85,7 +85,7 @@ func (e *Engine) ListenAndServe(addrs ...string) error {
 // Shutdown 用户自定义退出。 如果不是使用 ListenAndServe 启动则不能使用。
 func (e *Engine) Shutdown(ctx context.Context) error {
 	if e.srv == nil {
-		return errors.New(NotRunWithListenAndServe)
+		return errors.New(Err_NotRunWithListenAndServe)
 	}
 
 	return e.srv.Shutdown(ctx)
