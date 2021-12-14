@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"github.com/go-jarvis/rum-gonic/internal/example/apis/failed"
 	"github.com/go-jarvis/rum-gonic/internal/example/apis/index"
 	"github.com/go-jarvis/rum-gonic/internal/example/apis/pingpong"
 	"github.com/go-jarvis/rum-gonic/internal/example/auth"
@@ -15,6 +16,7 @@ var (
 func init() {
 
 	RouterRoot.Register(RouterV0)
+	RouterRoot.Register(&failed.CreateUser{})
 
 	{
 		RouterV0.Register(auth.AdminUsersMiddelware)

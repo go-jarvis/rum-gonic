@@ -75,6 +75,7 @@ func (r *RouterGroup) register(parent *RouterGroup) {
 	r.ginRG = r.parent.ginRG.Group(r.path)
 
 	for _, op := range r.operators {
+
 		// 添加中间件
 		if r.use(op) {
 			continue
@@ -139,6 +140,9 @@ func (r *RouterGroup) hanlde(op Operator) bool {
 func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
 
 	return func(c *gin.Context) {
+
+		//todo: op deepcopy
+		op := DeepCopyOperator(op)
 
 		err := ginbinder.ShouldBindRequest(c, op)
 		if err != nil {
