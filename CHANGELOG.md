@@ -5,6 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.4.3](https://github.com/go-jarvis/rum-gonic/compare/v0.4.2...v0.4.3)
+
+
 # [0.4.2](https://github.com/go-jarvis/rum-gonic/compare/v0.4.1...v0.4.2)
 
 ### Bug Fixes
