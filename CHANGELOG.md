@@ -5,6 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.4.1](https://github.com/go-jarvis/rum-gonic/compare/v0.4.0...v0.4.1)
+
+### Bug Fixes
+
+* **fix** user must provide route path at least in one way ([af8d5d5](https://github.com/go-jarvis/rum-gonic/commit/af8d5d5ad7d8ff2cf0542ed0deac4b4efc7d391d))
+
+
+
 # [0.4.0](https://github.com/go-jarvis/rum-gonic/compare/v0.3.0...v0.4.0)
 
 ### Bug Fixes
