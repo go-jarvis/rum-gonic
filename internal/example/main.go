@@ -31,7 +31,7 @@ func main() {
 	r.StaticFile("/user", "user.html")
 
 	// r.Static("/userindex", "userindex")
-	r.Static("/userindex", "/data/gopath/src/github.com/go-jarvis/rum-gonic/userindex")
+	r.Static("/userindex", "./userindex")
 
 	/* 启动方式 */
 	// 1. 普通方式启动
