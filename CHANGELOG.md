@@ -5,7 +5,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+# [0.4.4](https://github.com/go-jarvis/rum-gonic/compare/v0.4.3...v0.4.4)
+
+### Bug Fixes
+
+* **fix** [issue #9] static operator occur panic ([1be6d62](https://github.com/go-jarvis/rum-gonic/commit/1be6d62ea66409a390d3887249628e3149394d4f))
+
+
+
 # [0.4.3](https://github.com/go-jarvis/rum-gonic/compare/v0.4.2...v0.4.3)
+
 
 
 # [0.4.2](https://github.com/go-jarvis/rum-gonic/compare/v0.4.1...v0.4.2)
