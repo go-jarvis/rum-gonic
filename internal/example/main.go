@@ -5,8 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/go-jarvis/rum-gonic/internal/example/apis"
-	"github.com/go-jarvis/rum-gonic/internal/example/apis/index"
 	"github.com/go-jarvis/rum-gonic/internal/example/injector/redis"
 	"github.com/go-jarvis/rum-gonic/pkg/middlewares"
 
@@ -25,10 +23,10 @@ func main() {
 	// r.Register(auth.AdminUsers)
 
 	// 添加路由组 / 路由
-	r.Register(apis.RouterRoot)
-	r.Register(&index.Index{})
+	// r.Register(apis.RouterRoot)
+	// r.Register(&index.Index{})
 
-	r.Register(apis.RouterV0)
+	// r.Register(apis.RouterV0)
 
 	r.StaticFile("/user", "user.html")
 

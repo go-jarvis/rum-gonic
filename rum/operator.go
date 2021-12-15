@@ -18,5 +18,9 @@ type MethodOperator interface {
 
 // DeepCopyOperator return a deepcopied operator
 func DeepCopyOperator(op Operator) Operator {
+	if copier, ok := op.(OperatorDeepcopier); ok {
+		return copier.Deepcopy()
+	}
+
 	return NewOperatorFactory(op).New()
 }

@@ -8,10 +8,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func newStaticFile(method, path, filepath string) *StaticFile {
+	return &StaticFile{
+		method:   method,
+		path:     path,
+		filepath: filepath,
+	}
+}
+
+var _ OperatorDeepcopier = (*StaticFile)(nil)
+
 type StaticFile struct {
 	method   string
 	path     string
 	filepath string
+}
+
+func (static *StaticFile) Deepcopy() Operator {
+	return &StaticFile{
+		method:   static.method,
+		path:     static.path,
+		filepath: static.filepath,
+	}
 }
 
 func (static *StaticFile) Path() string {
@@ -29,14 +47,6 @@ func (static *StaticFile) Output(c *gin.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func newStaticFile(method, path, filepath string) *StaticFile {
-	return &StaticFile{
-		method:   method,
-		path:     path,
-		filepath: filepath,
-	}
-}
-
 // StaticFile registers a single route in order to serve a single file of the local filesystem.
 // router.StaticFile("favicon.ico", "./resources/favicon.ico")
 func (r *RouterGroup) StaticFile(path, filepath string) {
@@ -47,10 +57,20 @@ func (r *RouterGroup) StaticFile(path, filepath string) {
 	}
 }
 
+var _ OperatorDeepcopier = (*StaticFS)(nil)
+
 type StaticFS struct {
 	method string
 	path   string
 	fs     http.FileSystem
+}
+
+func (static *StaticFS) Deepcopy() Operator {
+	return &StaticFS{
+		method: static.method,
+		path:   static.path,
+		fs:     static.fs,
+	}
 }
 
 func (static *StaticFS) Path() string {

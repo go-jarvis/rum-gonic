@@ -18,8 +18,13 @@ type OperatorFactory struct {
 	Operator Operator
 }
 
+type OperatorDeepcopier interface {
+	Deepcopy() Operator
+}
+
 // New create a new operator
 func (fact *OperatorFactory) New() Operator {
+
 	opc := reflect.New(fact.Type).Interface().(Operator)
 	return opc
 }
