@@ -84,7 +84,7 @@ func (static *StaticFS) Output(c *gin.Context) (interface{}, error) {
 
 	file := c.Param("filepath")
 	urlPath := c.Request.URL.Path
-	prefix := strings.TrimRight(urlPath, file)
+	prefix := strings.TrimSuffix(urlPath, file)
 
 	// https://shockerli.net/post/golang-pkg-http-file-server/#支持子目录路径
 	// 在使用 static 或 staticFS 后,  fileserver 的路由工作目录已经切换到文件目录
@@ -126,7 +126,6 @@ func (r *RouterGroup) StaticFS(path string, fs http.FileSystem) {
 
 		r.addOperators(op)
 	}
-
 }
 
 // Static serves files from the given file system root.
