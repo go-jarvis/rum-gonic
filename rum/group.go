@@ -58,9 +58,7 @@ func (r *RouterGroup) Register(ops ...Operator) {
 		}
 
 		// 加入 middleware operator 或 logic operator
-		if logicOp, ok := op.(Operator); ok {
-			r.operators = append(r.operators, logicOp)
-		}
+		r.operators = append(r.operators, op)
 	}
 }
 
@@ -138,6 +136,12 @@ func (r *RouterGroup) hanlde(op Operator) bool {
 
 // handlerfunc 处理业务逻辑， 在 gin 中注册路由
 func (r *RouterGroup) handlerfunc(op Operator) HandlerFunc {
+
+	// if static server, no params to bind
+	// return as soon as possible
+	if static, ok := op.(StaticOperator); ok {
+		return static.StaticHanlder(r.ginRG.BasePath())
+	}
 
 	return func(c *gin.Context) {
 
