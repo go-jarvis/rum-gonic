@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-jarvis/rum-gonic/pkg/handlers"
+	"github.com/go-jarvis/rum-gonic/pkg/logger"
 )
 
 type Engine struct {
@@ -19,9 +21,16 @@ type Engine struct {
 
 // Default 默认 gin.Engine
 func Default() *Engine {
-	r := gin.Default()
+	// r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(handlers.TraceHandler, logger.NewSLoggerHandler)
+	r.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		SkipPaths: []string{"/liveness"},
+	}))
+	e := New(r)
 
-	return New(r)
+	return e
 }
 
 // New 使用自定义 gin.Engine

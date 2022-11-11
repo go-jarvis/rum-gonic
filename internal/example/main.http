@@ -11,10 +11,21 @@ GET http://127.0.0.1:8080/v0/ping/wangwu?age=102
 
 
 ### user
+GET http://127.0.0.1:8080/user?e=nil
+SpanId: span123
+TraceId: trace123
+
+### user
 GET http://127.0.0.1:8080/index?e=nil
+SpanId: span123
+TraceId: trace123
+
 
 
 
 ### Get /v0/index
 GET http://127.0.0.1:8080/v0/index?name=zhangsan
 Authorization: Basic user1:tangxin
+SpanId: span123
+TraceId: trace123
+
