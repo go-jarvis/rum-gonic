@@ -10,7 +10,7 @@ func main() {
 	e := server.Default()
 	e.Use(path.MiddlewarePath)
 
-	e.AddPath(api.RootApp)
+	e.AddRouter(api.RootApp)
 	if err := e.Run(":8081"); err != nil {
 		panic(err)
 	}

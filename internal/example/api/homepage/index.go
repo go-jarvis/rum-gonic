@@ -6,7 +6,7 @@ import (
 	"github.com/go-jarvis/rum-gonic/server"
 )
 
-var IndexRouter = server.NewRumPath("")
+var IndexRouter = server.NewRouter("")
 
 func init() {
 	IndexRouter.Handle(&Index{})

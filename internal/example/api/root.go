@@ -6,9 +6,9 @@ import (
 	"github.com/go-jarvis/rum-gonic/server"
 )
 
-var RootApp = server.NewRumPath("/app")
+var RootApp = server.NewRouter("/app")
 
 func init() {
-	RootApp.AddPath(homepage.IndexRouter)
-	RootApp.AddPath(sub.SubRouter)
+	RootApp.AddRouter(homepage.IndexRouter)
+	RootApp.AddRouter(sub.SubRouter)
 }
