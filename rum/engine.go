@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-jarvis/rum-gonic/pkg/middlewares/trace"
 )
 
 type Engine struct {
@@ -25,6 +26,14 @@ func Default() *Engine {
 	r.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		SkipPaths: []string{"/liveness"},
 	}))
+
+	r.Use()
+
+	r.Use(
+		trace.TraceSpanExtractMiddleware,
+		trace.TraceSpanInjectMiddleware,
+		trace.WithSpanLoggerMiddleware,
+	)
 	e := New(r)
 
 	return e
