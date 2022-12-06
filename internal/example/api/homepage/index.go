@@ -1,29 +1,15 @@
-package main
+package homepage
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/pkg/httpx"
 	"github.com/go-jarvis/rum-gonic/server"
 )
 
-func main() {
-	e := server.Default()
-	e.Use(MiddlewarePath)
+var IndexRouter = server.NewRumPath("")
 
-	// 1. 添加一个服务
-	e.Handle(&Index{})
-
-	// 2. 定义 subPath
-	sub := server.NewRumPath("/sub")
-	sub.Use(MiddlewarePath)
-	sub.Handle(&Index{})
-	e.AddPath(sub)
-
-	if err := e.Run(":8081"); err != nil {
-		panic(err)
-	}
+func init() {
+	IndexRouter.Handle(&Index{})
 }
 
 var _ server.APIOperator = &Index{}
@@ -45,8 +31,4 @@ func (index *Index) Output(c *gin.Context) (any, error) {
 		"name": "zhangsan",
 	}
 	return result, nil
-}
-
-func MiddlewarePath(c *gin.Context) {
-	fmt.Println(c.Request.URL.Path)
 }

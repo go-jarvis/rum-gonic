@@ -1,3 +1,3 @@
 
 up:
-	cd __demo__/ && go run .
+	cd internal/example/ && go run .
