@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func TraceSpanInject(c *gin.Context) {
+func TraceSpanInjectMiddleware(c *gin.Context) {
 
 	// 1. 从 gin context value 中获取 span
 	span := TraceSpanFromContext(c)

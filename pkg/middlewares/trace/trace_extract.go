@@ -21,9 +21,9 @@ const (
 	ginOtelTraceParentID = `ginOtelTraceParentID`
 )
 
-// TraceSpanExtract 一个 middleware。
+// TraceSpanExtractMiddleware 一个 middleware。
 // 解析 header, 并在 gin value 中加入 OpenTelemetry trace span
-func TraceSpanExtract(c *gin.Context) {
+func TraceSpanExtractMiddleware(c *gin.Context) {
 
 	// 1. 从 header 中获取关键字
 	mapHeader := propagation.MapCarrier{
@@ -96,13 +96,13 @@ func newSpan(span trace.Span) trace.Span {
 	return trace.SpanFromContext(ctx)
 }
 
-// traceParentIDFromContext 从 从 gin context 中获取 trace parend id
-func traceParentIDFromContext(ctx context.Context) string {
-	v := ctx.Value(ginOtelTraceParentID)
+// // traceParentIDFromContext 从 从 gin context 中获取 trace parend id
+// func traceParentIDFromContext(ctx context.Context) string {
+// 	v := ctx.Value(ginOtelTraceParentID)
 
-	id, ok := v.(string)
-	if ok {
-		return id
-	}
-	return ""
-}
+// 	id, ok := v.(string)
+// 	if ok {
+// 		return id
+// 	}
+// 	return ""
+// }

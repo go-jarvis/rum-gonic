@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-jarvis/statuserrors v0.1.1
+	github.com/google/uuid v1.3.0
 	github.com/tangx/ginbinder v0.1.2
 	go.opentelemetry.io/otel v1.11.2
 	go.opentelemetry.io/otel/trace v1.11.2
