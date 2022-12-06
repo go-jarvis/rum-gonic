@@ -16,14 +16,14 @@ type rumServer struct {
 
 func Default() *rumServer {
 	e := gin.Default()
-	rg := e.Group("/")
+	g := e.Group("/")
+
+	group := newRumRouterGroup("/")
+	group.withGinRouterGroup(g)
 
 	return &rumServer{
 		engine: e,
-		group: &rumRouterGroup{
-			path:  "/",
-			group: rg,
-		},
+		group:  group,
 	}
 }
 
@@ -42,13 +42,20 @@ func (e *rumServer) Handle(handlers ...Operator) {
 type rumRouterGroup struct {
 	path  string
 	group *gin.RouterGroup
+
+	subgroups []*rumRouterGroup
 }
 
-// func newRumRouterGroup(path string) *rumRouterGroup {
-// 	return &rumRouterGroup{
-// 		path: path,
-// 	}
-// }
+func newRumRouterGroup(path string) *rumRouterGroup {
+	return &rumRouterGroup{
+		path:      path,
+		subgroups: make([]*rumRouterGroup, 0),
+	}
+}
+
+func (rg *rumRouterGroup) withGinRouterGroup(g *gin.RouterGroup) {
+	rg.group = g
+}
 
 func (rg *rumRouterGroup) Use(handlers ...HandlerFunc) {
 	rg.group.Use(handlers...)
