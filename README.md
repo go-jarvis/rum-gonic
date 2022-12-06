@@ -51,3 +51,9 @@ func logic(index *Index) map[string]string {
 	}
 }
 ```
+
+## 感谢
+
+感谢 [JetBrain](https://www.jetbrains.com/) 支持
+
+![jetbrain](./jetbrains.jpeg)
