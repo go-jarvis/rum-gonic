@@ -2,7 +2,7 @@ package server
 
 import "github.com/gin-gonic/gin"
 
-type HanlderOperator interface {
+type APIOperator interface {
 	Methods() string
 	Path() string
 	Operator

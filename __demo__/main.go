@@ -16,7 +16,7 @@ func main() {
 	}
 }
 
-var _ server.HanlderOperator = &Index{}
+var _ server.APIOperator = &Index{}
 
 type Index struct {
 	httpx.MethodGet

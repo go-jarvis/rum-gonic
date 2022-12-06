@@ -7,15 +7,23 @@ import (
 	"github.com/tangx/ginbinder"
 )
 
+type HandlerFunc = gin.HandlerFunc
+
 type rumServer struct {
 	engine *gin.Engine
+	group  *rumRouterGroup
 }
 
 func Default() *rumServer {
 	e := gin.Default()
+	rg := e.Group("/")
 
 	return &rumServer{
 		engine: e,
+		group: &rumRouterGroup{
+			path:  "/",
+			group: rg,
+		},
 	}
 }
 
@@ -23,23 +31,38 @@ func (e *rumServer) Run(addr string) error {
 	return e.engine.Run(addr)
 }
 
-type HandlerFunc = gin.HandlerFunc
-
-func (e *rumServer) Use(fns ...HandlerFunc) {
-	for _, fn := range fns {
-		e.engine.Use(fn)
-	}
+func (e *rumServer) Use(handlers ...HandlerFunc) {
+	e.group.Use(handlers...)
 }
 
-func (e *rumServer) Handle(handlers ...HanlderOperator) {
-	for _, h := range handlers {
-		_, _ = e.handle(h)
-	}
+func (e *rumServer) Handle(handlers ...Operator) {
+	e.group.Handle(handlers...)
 }
-func (e *rumServer) handle(handler HanlderOperator) (interface{}, error) {
 
-	e.engine.Handle(handler.Methods(), handler.Path(), handle(handler))
-	return nil, nil
+type rumRouterGroup struct {
+	path  string
+	group *gin.RouterGroup
+}
+
+// func newRumRouterGroup(path string) *rumRouterGroup {
+// 	return &rumRouterGroup{
+// 		path: path,
+// 	}
+// }
+
+func (rg *rumRouterGroup) Use(handlers ...HandlerFunc) {
+	rg.group.Use(handlers...)
+}
+
+func (rg *rumRouterGroup) Handle(operators ...Operator) {
+	for _, oper := range operators {
+		op, ok := oper.(APIOperator)
+		if !ok {
+			continue
+		}
+
+		rg.group.Handle(op.Methods(), op.Path(), handle(op))
+	}
 }
 
 func handle(op Operator) HandlerFunc {
