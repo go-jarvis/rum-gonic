@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/internal/example/injector/redis"
 	"github.com/go-jarvis/rum-gonic/pkg/httpx"
-	"github.com/go-jarvis/rum-gonic/pkg/logger"
 	"github.com/go-jarvis/statuserrors"
 )
 
@@ -19,11 +18,9 @@ type Index struct {
 }
 
 func (index *Index) Output(c *gin.Context) (interface{}, error) {
-	logr := logger.FromContext(c)
 	msg := c.Query("e")
 	if msg == "nil" {
 		err := statuserrors.New(http.StatusBadRequest, "invalid request")
-		logr.Error("invalid request", err)
 		return nil, err
 	}
 
@@ -32,17 +29,12 @@ func (index *Index) Output(c *gin.Context) (interface{}, error) {
 		return "this is user define output data, not from error", err
 	}
 
-	logr.Info("Index")
-
 	return logic(c, index), nil
 }
 
 func logic(ctx context.Context, index *Index) map[string]string {
 
 	ra := redis.FromRedisAgentOnline(ctx)
-
-	logr := logger.FromContext(ctx)
-	logr.Info("Logic")
 
 	return map[string]string{
 		"redis-agent": ra.ServerAddr(),
