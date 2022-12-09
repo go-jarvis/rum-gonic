@@ -3,7 +3,7 @@ package server
 import "github.com/gin-gonic/gin"
 
 type APIOperator interface {
-	Methods() string
+	Method() string
 	Path() string
 	Operator
 }

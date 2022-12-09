@@ -106,7 +106,7 @@ func (rr *rumRouter) handle() {
 		if !ok {
 			continue
 		}
-		rr.ginRG.Handle(op.Methods(), op.Path(), handle(op))
+		rr.ginRG.Handle(op.Method(), op.Path(), handle(op))
 	}
 }
 
