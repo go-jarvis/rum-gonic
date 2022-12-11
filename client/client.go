@@ -65,19 +65,20 @@ type Result struct {
 	response *http.Response
 }
 
-func (r *Result) Bind(receiver interface{}) error {
+func (r *Result) Bind(receiver interface{}) (Meta, error) {
+	meta := Meta(r.response.Header)
 	if receiver == nil {
-		return nil
+		return meta, nil
 	}
 
 	b, err := io.ReadAll(r.response.Body)
 
 	if err != nil {
-		return err
+		return meta, err
 	}
 	defer r.response.Body.Close()
 
 	fmt.Println(string(b))
 
-	return json.Unmarshal(b, receiver)
+	return meta, json.Unmarshal(b, receiver)
 }

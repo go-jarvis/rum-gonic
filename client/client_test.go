@@ -25,7 +25,7 @@ func TestNewClient(t *testing.T) {
 	}
 
 	data := &Data{}
-	err = re.Bind(data)
+	_, err = re.Bind(data)
 	if err != nil {
 		panic(err)
 	}
