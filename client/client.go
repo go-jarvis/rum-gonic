@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/go-jarvis/rum-gonic/pkg/operator"
@@ -68,6 +69,7 @@ func newRequest(ctx context.Context, op operator.APIOperator, meta Meta) (*http.
 
 func requestPath(op operator.APIOperator) string {
 	path := op.Path()
+	queries := []string{}
 
 	rv := reflect.ValueOf(op)
 	rv = reflectx.Indirect(rv)
@@ -79,6 +81,14 @@ func requestPath(op operator.APIOperator) string {
 		fv := rv.Field(i)
 		ft := rt.Field(i)
 		path = replacePath(path, ft, fv)
+		query := parseQuery(ft, fv)
+		if len(query) != 0 {
+			queries = append(queries, query)
+		}
+	}
+
+	if len(queries) != 0 {
+		path = fmt.Sprintf("%s?%s", path, strings.Join(queries, "&"))
 	}
 
 	return path
@@ -112,4 +122,56 @@ func replacePath(path string, ft reflect.StructField, fv reflect.Value) string {
 	path = strings.ReplaceAll(path, "*"+tag, value)
 
 	return path
+}
+
+func parseQuery(ft reflect.StructField, fv reflect.Value) string {
+	name, ok := ft.Tag.Lookup("query")
+	if !ok {
+		return ""
+	}
+
+	// value := ""
+	switch val := fv.Interface().(type) {
+	case string:
+		return fmt.Sprintf("%s=%s", name, val)
+	case *string:
+		return fmt.Sprintf("%s=%s", name, *val)
+	case int, int8, int16, int32, int64,
+		uint, uint8, uint16, uint32, uint64:
+		return fmt.Sprintf("%s=%d", name, val)
+	case *int:
+		return fmt.Sprintf("%s=%d", name, *val)
+	case bool:
+		v := strconv.FormatBool(val)
+		return fmt.Sprintf("%s=%s", name, v)
+	case *bool:
+		v := strconv.FormatBool(*val)
+		return fmt.Sprintf("%s=%s", name, v)
+	case []string:
+		for i, v := range val {
+			v = fmt.Sprintf("%s=%s", name, v)
+			val[i] = v
+		}
+		return strings.Join(val, "&")
+	case []*string:
+		valc := make([]string, len(val))
+		for i, v := range val {
+			valc[i] = fmt.Sprintf("%s=%s", name, *v)
+		}
+		return strings.Join(valc, "&")
+	case []int:
+		valc := make([]string, len(val))
+		for i, v := range val {
+			valc[i] = fmt.Sprintf("%s=%d", name, v)
+		}
+		return strings.Join(valc, "&")
+	case []*int:
+		valc := make([]string, len(val))
+		for i, v := range val {
+			valc[i] = fmt.Sprintf("%s=%d", name, *v)
+		}
+		return strings.Join(valc, "&")
+	}
+
+	return ""
 }
