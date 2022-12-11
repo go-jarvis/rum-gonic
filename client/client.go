@@ -101,7 +101,10 @@ func requestPath(op operator.APIOperator) string {
 			v = fmt.Sprint(val)
 		}
 
+		// path=/user/:name
 		path = strings.ReplaceAll(path, ":"+value, v)
+		// path=/user/*name
+		path = strings.ReplaceAll(path, "*"+value, v)
 	}
 
 	return path
