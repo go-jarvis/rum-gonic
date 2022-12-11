@@ -1,11 +1,10 @@
-package server
+package operator
 
 import "github.com/gin-gonic/gin"
 
 type APIOperator interface {
 	Method() string
 	Path() string
-	Operator
 }
 
 type Operator interface {

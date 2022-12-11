@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-jarvis/rum-gonic/pkg/operator"
 	"github.com/tangx/ginbinder"
 )
 
@@ -106,7 +107,7 @@ func (rr *rumRouter) handle() {
 		if !ok {
 			continue
 		}
-		rr.ginRG.Handle(op.Methods(), op.Path(), handle(op))
+		rr.ginRG.Handle(op.Method(), op.Path(), handle(oper))
 	}
 }
 
@@ -119,11 +120,12 @@ func (rr *rumRouter) AddRouter(groups ...*rumRouter) {
 func handle(op Operator) HandlerFunc {
 	return func(c *gin.Context) {
 
+		op := operator.DeepCopy(op)
+
 		// 参数绑定
 		cc := c.Copy()
 		err := ginbinder.ShouldBindRequest(cc, op)
 		if err != nil {
-
 			c.AbortWithStatusJSON(http.StatusBadRequest, wrapError(err))
 			return
 		}
