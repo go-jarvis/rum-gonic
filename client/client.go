@@ -78,32 +78,38 @@ func requestPath(op operator.APIOperator) string {
 	for i := 0; i < rt.NumField(); i++ {
 		fv := rv.Field(i)
 		ft := rt.Field(i)
-
-		value := ft.Tag.Get("uri")
-		if value == "" {
-			continue
-		}
-
-		fv = reflectx.Indirect(fv)
-		v := ""
-		switch val := fv.Interface().(type) {
-		case string, *string:
-			v = fmt.Sprint(val)
-		case int, int8, int16, int32, int64,
-			uint, uint8, uint16, uint32, uint64:
-			v = fmt.Sprint(val)
-		case *int, *int8, *int16, *int32, *int64,
-			*uint, *uint8, *uint16, *uint32, *uint64:
-			v = fmt.Sprint(val)
-		case bool, *bool:
-			v = fmt.Sprint(val)
-		}
-
-		// path=/user/:name
-		path = strings.ReplaceAll(path, ":"+value, v)
-		// path=/user/*name
-		path = strings.ReplaceAll(path, "*"+value, v)
+		path = replacePath(path, ft, fv)
 	}
+
+	return path
+}
+
+func replacePath(path string, ft reflect.StructField, fv reflect.Value) string {
+
+	tag := ft.Tag.Get("uri")
+	if tag == "" {
+		return path
+	}
+
+	fv = reflectx.Indirect(fv)
+	value := ""
+	switch v := fv.Interface().(type) {
+	case string, *string:
+		value = fmt.Sprint(v)
+	case int, int8, int16, int32, int64,
+		uint, uint8, uint16, uint32, uint64:
+		value = fmt.Sprint(v)
+	case *int, *int8, *int16, *int32, *int64,
+		*uint, *uint8, *uint16, *uint32, *uint64:
+		value = fmt.Sprint(v)
+	case bool, *bool:
+		value = fmt.Sprint(v)
+	}
+
+	// path=/user/:name
+	path = strings.ReplaceAll(path, ":"+tag, value)
+	// path=/user/*name
+	path = strings.ReplaceAll(path, "*"+tag, value)
 
 	return path
 }
