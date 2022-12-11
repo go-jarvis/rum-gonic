@@ -2,15 +2,15 @@
 ### GET name=zhangsan&name=wangwu&name=zhaoliu
 GET http://127.0.0.1:8089/?name=zhangsan&name=wangwu&name=zhaoliu
 
-### GET name=zhangsan,wangwu,zhaoliu
-GET http://127.0.0.1:8089/?name=zhangsan,wangwu,zhaoliu
+# ### GET name=zhangsan,wangwu,zhaoliu
+# GET http://127.0.0.1:8089/?name=zhangsan,wangwu,zhaoliu
 
 
-### GET name[]=zhangsan&name[]=wangwu&name[]=zhaoliu
-GET http://127.0.0.1:8089/?name[]=zhangsan&name[]=wangwu&name[]=zhaoliu
+# ### GET name[]=zhangsan&name[]=wangwu&name[]=zhaoliu
+# GET http://127.0.0.1:8089/?name[]=zhangsan&name[]=wangwu&name[]=zhaoliu
 
 
-### GET name[0]=zhangsan&name[1]=wangwu&name[2]=zhaoliu
-GET http://127.0.0.1:8089/?name[0]=zhangsan&name[1]=wangwu&name[2]=zhaoliu
+# ### GET name[0]=zhangsan&name[1]=wangwu&name[2]=zhaoliu
+# GET http://127.0.0.1:8089/?name[0]=zhangsan&name[1]=wangwu&name[2]=zhaoliu
 
 
