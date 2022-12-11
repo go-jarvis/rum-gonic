@@ -14,13 +14,17 @@ func TestNewClient(t *testing.T) {
 	c := NewClient()
 
 	hp := &httpbin{}
+	meta := Meta{
+		"TraceId": []string{"trace_id", "abc"},
+		"Span-ID": []string{"spanID", "span123"},
+	}
 
-	data := &Data{}
-	re, err := c.Do(context.TODO(), hp)
+	re, err := c.Do(context.TODO(), hp, meta)
 	if err != nil {
 		panic(err)
 	}
 
+	data := &Data{}
 	err = re.Bind(data)
 	if err != nil {
 		panic(err)

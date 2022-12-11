@@ -1,10 +1,11 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/go-jarvis/rum-gonic/pkg/operator"
@@ -20,12 +21,13 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) Do(ctx context.Context, op operator.APIOperator) (*Result, error) {
+func (c *Client) Do(ctx context.Context, op operator.APIOperator, meta Meta) (*Result, error) {
 
-	req, err := http.NewRequestWithContext(ctx, op.Method(), op.Path(), nil)
+	req, err := newRequest(ctx, op, meta)
 	if err != nil {
 		return nil, err
 	}
+	req.Header = http.Header(meta)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -37,16 +39,39 @@ func (c *Client) Do(ctx context.Context, op operator.APIOperator) (*Result, erro
 	}, nil
 }
 
+func newRequest(ctx context.Context, api operator.APIOperator, meta Meta) (*http.Request, error) {
+
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	b, err := json.Marshal(api)
+	if err != nil {
+		return nil, err
+	}
+	buf := bytes.NewBuffer(b)
+
+	req, err := http.NewRequestWithContext(ctx, api.Method(), api.Path(), buf)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header = http.Header(meta)
+
+	return req, nil
+}
+
 type Result struct {
 	response *http.Response
 }
 
-func (r *Result) Bind(data interface{}) error {
-	// if data == nil {
-	// 	return nil
-	// }
+func (r *Result) Bind(receiver interface{}) error {
+	if receiver == nil {
+		return nil
+	}
 
-	b, err := ioutil.ReadAll(r.response.Body)
+	b, err := io.ReadAll(r.response.Body)
+
 	if err != nil {
 		return err
 	}
@@ -54,5 +79,5 @@ func (r *Result) Bind(data interface{}) error {
 
 	fmt.Println(string(b))
 
-	return json.Unmarshal(b, data)
+	return json.Unmarshal(b, receiver)
 }
