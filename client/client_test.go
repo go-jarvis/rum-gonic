@@ -13,7 +13,13 @@ func TestNewClient(t *testing.T) {
 
 	c := NewClient()
 
-	hp := &httpbin{}
+	age := 20
+	hp := &httpbin{
+		Name:   "zhangsan",
+		Age:    &age,
+		Gender: true,
+	}
+
 	meta := Meta{
 		"TraceId": []string{"trace_id", "abc"},
 		"Span-ID": []string{"spanID", "span123"},
@@ -37,10 +43,13 @@ var _ operator.APIOperator = &httpbin{}
 
 type httpbin struct {
 	httpx.MethodGet
+	Name   string `uri:"name"`
+	Age    *int   `uri:"age"`
+	Gender bool   `uri:"gender"`
 }
 
 func (hp *httpbin) Path() string {
-	return "https://httpbin.org/get"
+	return "https://httpbin.org/get/:name/:age/:gender"
 }
 
 type Data struct {
