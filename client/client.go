@@ -97,8 +97,6 @@ func requestPath(op operator.APIOperator) string {
 			v = fmt.Sprint(val)
 		case bool, *bool:
 			v = fmt.Sprint(val)
-		default:
-			v = fmt.Sprint(val)
 		}
 
 		// path=/user/:name
