@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/pkg/operator"
+	"github.com/go-jarvis/rum-gonic/pkg/reflectx"
 	"github.com/tangx/ginbinder"
 )
 
@@ -103,16 +105,37 @@ func (rr *rumRouter) Handle(operators ...operator.Operator) {
 // handle 在 initial 调用时， 绑定服务到 gin.RouterGroup
 func (rr *rumRouter) handle() {
 	for _, oper := range rr.operators {
-		method, path := "", ""
-		if op, ok := oper.(operator.MethodOperator); ok {
-			method = op.Method()
-		}
-		if op, ok := oper.(operator.PathOperator); ok {
-			path = op.Path()
-		}
-
+		method, path := methodPath(oper)
 		rr.ginRG.Handle(method, path, handle(oper))
 	}
+}
+
+func methodPath(oper operator.Operator) (method string, path string) {
+
+	if op, ok := oper.(operator.MethodOperator); ok {
+		method = op.Method()
+	}
+	if op, ok := oper.(operator.PathOperator); ok {
+		path = op.Path()
+	}
+
+	if path != "" {
+		return method, path
+	}
+
+	rt := reflect.TypeOf(oper)
+	rt = reflectx.Deref(rt)
+	for i := 0; i < rt.NumField(); i++ {
+		ft := rt.Field(i)
+		// 取一个
+		val, ok := ft.Tag.Lookup("path")
+		if ok {
+			path = val
+			break
+		}
+	}
+
+	return method, path
 }
 
 // AddRouter 添加子路由

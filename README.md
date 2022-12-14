@@ -26,29 +26,45 @@
 将 method, path, handler 组合在一起代码如下
 
 ```go
-package index
+package homepage
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tangx/rum-gonic/httpx"
+	"github.com/go-jarvis/rum-gonic/pkg/httpx"
+	"github.com/go-jarvis/rum-gonic/pkg/logger"
+	"github.com/go-jarvis/rum-gonic/server"
 )
 
+var IndexRouter = server.NewRouter("")
+
+func init() {
+	IndexRouter.Handle(&Index{})
+}
+
 type Index struct {
-	// httpx.MethodAny `path:"/index.any"`
-	httpx.MethodMulti `path:"/index" methods:"GET,HEAD"`
-	Name              string `query:"name"`
+	httpx.MethodGet `path:"/index/:id"`
+	ID              string
 }
 
-func (index *Index) Output(c *gin.Context) (interface{}, error) {
-	return logic(index), nil
-}
+// Path() 如存在， 优先使用此处的 path 值。
+// func (index *Index) Path() string {
+// 	return "/index"
+// }
 
-func logic(index *Index) map[string]string {
-	return map[string]string{
-		"code":    "200",
-		"message": "index.html",
-		"name":    index.Name,
+func (index *Index) Output(c *gin.Context) (any, error) {
+
+	log := logger.FromContext(c)
+
+	log = log.With("kk", "vv").Start()
+	defer log.Stop()
+
+	log.Debug("number %d", 100)
+	log.Info("name %s", "index")
+
+	result := map[string]string{
+		"name": "zhangsan",
 	}
+	return result, nil
 }
 ```
 
