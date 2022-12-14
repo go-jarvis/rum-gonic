@@ -13,18 +13,14 @@ func init() {
 	IndexRouter.Handle(&Index{})
 }
 
-var _ server.APIOperator = &Index{}
-
 type Index struct {
-	httpx.MethodGet
+	httpx.MethodGet `path:"/index/:id"`
+	ID              string
 }
 
-func (index *Index) Path() string {
-	return "/index"
-}
-func (index *Index) Methods() string {
-	return index.Method()
-}
+// func (index *Index) Path() string {
+// 	return "/index"
+// }
 
 func (index *Index) Output(c *gin.Context) (any, error) {
 

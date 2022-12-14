@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/pkg/operator"
+	"github.com/go-jarvis/rum-gonic/pkg/reflectx"
 	"github.com/tangx/ginbinder"
 )
 
@@ -41,7 +43,7 @@ func (e *rumServer) Use(handlers ...HandlerFunc) {
 	e.group.Use(handlers...)
 }
 
-func (e *rumServer) Handle(handlers ...Operator) {
+func (e *rumServer) Handle(handlers ...operator.Operator) {
 	e.group.Handle(handlers...)
 }
 
@@ -55,7 +57,7 @@ type rumRouter struct {
 
 	subRouters []*rumRouter
 
-	operators   []Operator
+	operators   []operator.Operator
 	middlewares []HandlerFunc
 }
 
@@ -96,19 +98,44 @@ func (rr *rumRouter) use() {
 }
 
 // Handle 添加业务逻辑
-func (rr *rumRouter) Handle(operators ...Operator) {
+func (rr *rumRouter) Handle(operators ...operator.Operator) {
 	rr.operators = append(rr.operators, operators...)
 }
 
 // handle 在 initial 调用时， 绑定服务到 gin.RouterGroup
 func (rr *rumRouter) handle() {
 	for _, oper := range rr.operators {
-		op, ok := oper.(APIOperator)
-		if !ok {
-			continue
-		}
-		rr.ginRG.Handle(op.Method(), op.Path(), handle(oper))
+		method, path := methodPath(oper)
+		rr.ginRG.Handle(method, path, handle(oper))
 	}
+}
+
+func methodPath(oper operator.Operator) (method string, path string) {
+
+	if op, ok := oper.(operator.MethodOperator); ok {
+		method = op.Method()
+	}
+	if op, ok := oper.(operator.PathOperator); ok {
+		path = op.Path()
+	}
+
+	if path != "" {
+		return method, path
+	}
+
+	rt := reflect.TypeOf(oper)
+	rt = reflectx.Deref(rt)
+	for i := 0; i < rt.NumField(); i++ {
+		ft := rt.Field(i)
+		// 取一个
+		val, ok := ft.Tag.Lookup("path")
+		if ok {
+			path = val
+			break
+		}
+	}
+
+	return method, path
 }
 
 // AddRouter 添加子路由
@@ -117,7 +144,7 @@ func (rr *rumRouter) AddRouter(groups ...*rumRouter) {
 }
 
 // handle 处理业务逻辑
-func handle(op Operator) HandlerFunc {
+func handle(op operator.Operator) HandlerFunc {
 	return func(c *gin.Context) {
 
 		op := operator.DeepCopy(op)
