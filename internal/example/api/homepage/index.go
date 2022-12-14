@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-jarvis/rum-gonic/pkg/httpx"
 	"github.com/go-jarvis/rum-gonic/pkg/logger"
+	"github.com/go-jarvis/rum-gonic/pkg/operator"
 	"github.com/go-jarvis/rum-gonic/server"
 )
 
@@ -13,7 +14,7 @@ func init() {
 	IndexRouter.Handle(&Index{})
 }
 
-var _ server.APIOperator = &Index{}
+var _ operator.APIOperator = &Index{}
 
 type Index struct {
 	httpx.MethodGet
