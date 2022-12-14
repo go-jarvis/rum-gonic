@@ -102,6 +102,10 @@ func replacePath(path string, ft reflect.StructField, fv reflect.Value) string {
 	}
 
 	fv = reflectx.Indirect(fv)
+	if !fv.IsValid() {
+		return path
+	}
+
 	value := ""
 	switch v := fv.Interface().(type) {
 	case string, *string:
@@ -130,6 +134,10 @@ func parseQuery(ft reflect.StructField, fv reflect.Value) string {
 		return ""
 	}
 
+	fv = reflectx.Indirect(fv)
+	if !fv.IsValid() {
+		return ""
+	}
 	// value := ""
 	switch val := fv.Interface().(type) {
 	case string:

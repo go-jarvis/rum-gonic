@@ -13,12 +13,12 @@ func TestNewClient(t *testing.T) {
 
 	c := NewClient()
 
-	age := 20
+	// age := 20
 	z := "zhangsan"
 	w := "wangwu"
 	hp := &httpbin{
-		Name:   "zhangsan",
-		Age:    &age,
+		Name: "zhangsan",
+		// Age:    &age,
 		Gender: true,
 		Users:  []*string{&z, &w},
 	}
