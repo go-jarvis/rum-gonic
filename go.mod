@@ -6,6 +6,9 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-jarvis/logr v0.1.2
 	github.com/tangx/ginbinder v0.1.3
+	go.opentelemetry.io/otel v1.11.2
+	go.opentelemetry.io/otel/trace v1.11.2
+	golang.org/x/net v0.0.0-20210913180222-943fd674d43e
 )
 
 require (
@@ -24,7 +27,6 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/exp v0.0.0-20221205204356-47842c84f3db // indirect
-	golang.org/x/net v0.0.0-20210913180222-943fd674d43e // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
