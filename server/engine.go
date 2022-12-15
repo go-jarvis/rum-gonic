@@ -17,18 +17,6 @@ type rumServer struct {
 	router *rumRouter
 }
 
-func Default() *rumServer {
-	e := gin.Default()
-
-	rg := e.Group("/")
-	router := NewRouter("/").withGinRG(rg)
-
-	return &rumServer{
-		engine: e,
-		router: router,
-	}
-}
-
 func (e *rumServer) Run(addr string) error {
 	e.initial()
 	return e.engine.Run(addr)
