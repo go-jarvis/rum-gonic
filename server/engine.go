@@ -14,19 +14,18 @@ type HandlerFunc = gin.HandlerFunc
 
 type rumServer struct {
 	engine *gin.Engine
-	group  *rumRouter
+	router *rumRouter
 }
 
 func Default() *rumServer {
 	e := gin.Default()
-	g := e.Group("/")
 
-	group := NewRouter("/")
-	group.withGinRG(g)
+	rg := e.Group("/")
+	router := NewRouter("/").withGinRG(rg)
 
 	return &rumServer{
 		engine: e,
-		group:  group,
+		router: router,
 	}
 }
 
@@ -36,19 +35,19 @@ func (e *rumServer) Run(addr string) error {
 }
 
 func (e *rumServer) initial() {
-	e.group.initial()
+	e.router.initial()
 }
 
 func (e *rumServer) Use(handlers ...HandlerFunc) {
-	e.group.Use(handlers...)
+	e.router.Use(handlers...)
 }
 
 func (e *rumServer) Handle(handlers ...operator.Operator) {
-	e.group.Handle(handlers...)
+	e.router.Handle(handlers...)
 }
 
 func (e *rumServer) AddRouter(routers ...*rumRouter) {
-	e.group.AddRouter(routers...)
+	e.router.AddRouter(routers...)
 }
 
 type rumRouter struct {
@@ -69,8 +68,9 @@ func NewRouter(path string) *rumRouter {
 }
 
 // withGinRG 添加 gin.RouterGroup
-func (rr *rumRouter) withGinRG(rg *gin.RouterGroup) {
+func (rr *rumRouter) withGinRG(rg *gin.RouterGroup) *rumRouter {
 	rr.ginRG = rg
+	return rr
 }
 
 // initial 初始化自身以及子路由
