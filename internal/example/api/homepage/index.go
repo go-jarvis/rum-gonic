@@ -35,5 +35,6 @@ func (index *Index) Output(c *gin.Context) (any, error) {
 	result := map[string]string{
 		"name": "zhangsan",
 	}
+
 	return result, nil
 }
