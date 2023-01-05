@@ -4,8 +4,8 @@ import (
 	"github.com/go-jarvis/logr"
 	"github.com/go-jarvis/rum-gonic/internal/example/api"
 	"github.com/go-jarvis/rum-gonic/pkg/logger"
+	"github.com/go-jarvis/rum-gonic/pkg/otelrum"
 	"github.com/go-jarvis/rum-gonic/server"
-	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -28,6 +28,7 @@ func initTracer() (*sdktrace.TracerProvider, error) {
 }
 
 func main() {
+	appname := `my-rum-server-example`
 	_, _ = initTracer()
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -43,7 +44,10 @@ func main() {
 	})
 
 	e := server.Default()
-	e.Use(otelgin.Middleware("my-rum-server-example"))
+
+	// e.Use(otelgin.Middleware("my-rum-server-example"))
+	e.Use(otelrum.Middleware(appname))
+
 	e.Use(logger.MiddlewareLogger(log))
 	e.Use(logger.MiddlewareLoggerWithSpan())
 
