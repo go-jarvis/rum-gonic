@@ -70,7 +70,7 @@ func (MethodTrace) Method() string {
 // example:
 //
 //	type Index struct {
-//		MethodMulti `path:"/index" methods:"GET,POST"`
+//		MethodMulti `route:"/index" methods:"GET,POST"`
 //	}
 type MethodMulti struct {
 	Methods string

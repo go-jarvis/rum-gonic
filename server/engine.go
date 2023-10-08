@@ -134,7 +134,7 @@ func methodPath(oper operator.Operator) (method string, path string) {
 	for i := 0; i < rt.NumField(); i++ {
 		ft := rt.Field(i)
 		// 取一个
-		val, ok := ft.Tag.Lookup("path")
+		val, ok := ft.Tag.Lookup("route")
 		if ok {
 			path = val
 			break

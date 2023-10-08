@@ -14,7 +14,7 @@ func init() {
 }
 
 type Index struct {
-	httpx.MethodGet `path:"/index/:id"`
+	httpx.MethodGet `route:"/index/:id"`
 	ID              string
 }
 
