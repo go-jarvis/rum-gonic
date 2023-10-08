@@ -68,8 +68,12 @@ func (index *Index) Output(c *gin.Context) (any, error) {
 }
 ```
 
-## 感谢
+## OpenAPI v3.1 Support
 
-感谢 [JetBrain](https://www.jetbrains.com/) 支持
-
-![jetbrain](./jetbrains.jpeg)
+```go
+type Index struct {
+	httpx.MethodGet
+	ID   string   `path:"id" example:"xxx-xxxx"`
+	Name []string `query:"name" example:"Mike Jackson"`
+}
+```

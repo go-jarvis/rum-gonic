@@ -1,0 +1,42 @@
+openapi: 3.1.0
+info:
+  description: my demo app
+  title: srv-demo-app
+  version: 0.0.0
+paths:
+  /{id}:
+    get:
+      parameters:
+      - in: query
+        name: name
+        schema:
+          items:
+            examples:
+            - Mike Jackson
+            type: string
+          type:
+          - array
+          - "null"
+      - in: path
+        name: id
+        required: true
+        schema:
+          examples:
+          - xxx-xxxx
+          type: string
+      responses:
+        "204":
+          description: No Content
+  /user-group/{class}:
+    post:
+      parameters:
+      - in: path
+        name: class
+        required: true
+        schema:
+          examples:
+          - yyy
+          type: string
+      responses:
+        "204":
+          description: No Content

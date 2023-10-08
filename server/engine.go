@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+	"path/filepath"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-jarvis/rum-gonic/pkg/openapi31"
 	"github.com/go-jarvis/rum-gonic/pkg/operator"
 	"github.com/go-jarvis/rum-gonic/pkg/reflectx"
 	"github.com/tangx/ginbinder"
@@ -19,6 +21,10 @@ type rumServer struct {
 
 func (e *rumServer) Run(addr string) error {
 	e.initial()
+
+	if openapi31.IsValidReflector() {
+		openapi31.OutputToFile("openapi.yaml")
+	}
 	return e.engine.Run(addr)
 }
 
@@ -46,6 +52,9 @@ type rumRouter struct {
 
 	operators   []operator.Operator
 	middlewares []HandlerFunc
+
+	// 当前 router 的完全路径
+	absolutelyPath string
 }
 
 func NewRouter(path string) *rumRouter {
@@ -55,8 +64,8 @@ func NewRouter(path string) *rumRouter {
 	}
 }
 
-// withGinRG 添加 gin.RouterGroup
-func (rr *rumRouter) withGinRG(rg *gin.RouterGroup) *rumRouter {
+// setGinRG 添加 gin.RouterGroup
+func (rr *rumRouter) setGinRG(rg *gin.RouterGroup) *rumRouter {
 	rr.ginRG = rg
 	return rr
 }
@@ -66,9 +75,13 @@ func (rr *rumRouter) initial() {
 	rr.use()
 	rr.handle()
 
+	// 遍历 sub group
 	for _, sub := range rr.subRouters {
 		subrg := rr.ginRG.Group(sub.path)
-		sub.withGinRG(subrg)
+		sub.setGinRG(subrg)
+
+		// 设置 sub 的完全路径
+		sub.absolutelyPath = filepath.Join(rr.absolutelyPath, sub.path)
 
 		sub.initial()
 	}
@@ -94,7 +107,13 @@ func (rr *rumRouter) Handle(operators ...operator.Operator) {
 func (rr *rumRouter) handle() {
 	for _, oper := range rr.operators {
 		method, path := methodPath(oper)
+
 		rr.ginRG.Handle(method, path, handle(oper))
+
+		abpath := filepath.Join(rr.absolutelyPath, path)
+
+		// 添加 openapi
+		openapi31.AddRouter(abpath, method, oper)
 	}
 }
 

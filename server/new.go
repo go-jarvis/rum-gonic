@@ -16,7 +16,7 @@ func New() *rumServer {
 	e := gin.New()
 
 	rg := e.Group("/")
-	router := NewRouter("/").withGinRG(rg)
+	router := NewRouter("/").setGinRG(rg)
 
 	return &rumServer{
 		engine: e,
