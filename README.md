@@ -70,10 +70,43 @@ func (index *Index) Output(c *gin.Context) (any, error) {
 
 ## OpenAPI v3.1 Support
 
+**配置 OpenAPI 信息**
+
+```go
+	// 初始化内置 openapi reflector
+	_ = openapi31.Init()
+	// 设置信息
+	openapi31.WithOptions(
+		openapi31.WithTitle("my-app"),
+		openapi31.WithDescription("this's a demo app"),
+		openapi31.WithVersion("v0.1.0"),
+		openapi31.WithFile("openapi2.yaml"),
+	)
+
+	// 输出 openapi31 信息
+	// 在 rum server 中会被默认调用
+	openapi31.Output()
+```
+
+**路由添加 OpenAPI 信息**
+
 ```go
 type Index struct {
 	httpx.MethodGet
 	ID   string   `path:"id" example:"xxx-xxxx"`
 	Name []string `query:"name" example:"Mike Jackson"`
 }
+
+type User struct {
+	httpx.MethodPost
+	Class string `path:"class" example:"yyy"`
+
+	User struct {
+		Name string `json:"name" example:"joe bidden"`
+		Age  int    `json:"age" example:"100"`
+	} `body:"body" mime:"json"`
+}
 ```
+
+1. `path, query, cookie, header, json` 等表示 **参数位置与名字**， 参考 [ginbinder 参数规则](https://github.com/tangx/ginbinder)， 同时也是 [openapi 规则](https://github.com/swaggest/openapi-go#features)
+2. `example` 表示 **默认值**

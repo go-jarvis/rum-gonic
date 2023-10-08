@@ -19,7 +19,7 @@ type reflector struct {
 
 var r *reflector
 
-func New() *reflector {
+func Init() *reflector {
 	r = &reflector{
 		refl:   &openapi31.Reflector{},
 		writer: os.Stdout,

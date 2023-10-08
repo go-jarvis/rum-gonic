@@ -12,7 +12,9 @@ import (
 
 func main() {
 
-	// _ = openapi31.New()
+	// 初始化内置 openapi reflector
+	_ = openapi31.Init()
+	// 设置信息
 	openapi31.WithOptions(
 		openapi31.WithTitle("my-app"),
 		openapi31.WithDescription("this's a demo app"),
