@@ -22,9 +22,8 @@ type rumServer struct {
 func (e *rumServer) Run(addr string) error {
 	e.initial()
 
-	if openapi31.IsValidReflector() {
-		openapi31.OutputToFile("openapi.yaml")
-	}
+	openapi31.Output()
+
 	return e.engine.Run(addr)
 }
 

@@ -12,7 +12,13 @@ import (
 
 func main() {
 
-	openapi31.New("srv-demo-app", "0.0.0", "my demo app")
+	// _ = openapi31.New()
+	openapi31.WithOptions(
+		openapi31.WithTitle("my-app"),
+		openapi31.WithDescription("this's a demo app"),
+		openapi31.WithVersion("v0.1.0"),
+		openapi31.WithFile("openapi2.yaml"),
+	)
 
 	r := server.Default()
 	r.Handle(&Index{})

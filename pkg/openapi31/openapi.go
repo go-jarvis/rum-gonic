@@ -9,42 +9,116 @@ import (
 	"github.com/swaggest/openapi-go/openapi31"
 )
 
-var reflector *openapi31.Reflector
+type reflector struct {
+	refl *openapi31.Reflector
 
-// New 初始化一个 OpenAPI Reflector
-func New(title, version, desc string) {
-	// 初始化
-	reflector = &openapi31.Reflector{}
+	writer io.Writer // 输出对象
+	file   string    // filename 保存到文件
 
-	// 设置基本信息
-	reflector.Spec = &openapi31.Spec{Openapi: "3.1.0"}
-	reflector.Spec.Info.
-		WithTitle(title).
-		WithVersion(version).
-		WithDescription(desc)
 }
 
-// IsValidReflector 判断 reflector 是否有效
+var r *reflector
+
+func New() *reflector {
+	r = &reflector{
+		refl:   &openapi31.Reflector{},
+		writer: os.Stdout,
+	}
+
+	r.refl.Spec = &openapi31.Spec{Openapi: "3.1.0"}
+	r.refl.Spec.Info.
+		WithTitle("title").
+		WithVersion("v0.0.0").
+		WithDescription("app description")
+
+	return r
+}
+
+// write 将 openapi yaml 格式内容输出到 writer 中。
+func (r *reflector) write() {
+	if len(r.file) != 0 {
+		f, err := os.OpenFile(r.file, os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		r.writer = f
+	}
+
+	schema, err := r.refl.Spec.MarshalYAML()
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = r.writer.Write(schema)
+	if err != nil {
+		panic(err)
+	}
+}
+
+type Option = func(r *reflector)
+
+// WithOptions 添加 options
+func WithOptions(opts ...Option) {
+	if !IsValid() {
+		return
+	}
+
+	for _, opt := range opts {
+		opt(r)
+	}
+}
+
+// WithFile 设置保存 openapi 数据的文件。 如果不设置， 将输出到 os.Stdout
+func WithFile(output string) Option {
+	return func(r *reflector) {
+		r.file = output
+	}
+}
+
+// WithTitle 设置 openapi info: app title
+func WithTitle(title string) Option {
+	return func(r *reflector) {
+		r.refl.Spec.Info.WithTitle(title)
+	}
+}
+
+// WithVersion 设置 openapi info: app version
+func WithVersion(version string) Option {
+	return func(r *reflector) {
+		r.refl.Spec.Info.WithVersion(version)
+	}
+}
+
+// WithDescription 设置 openapi info: app description
+func WithDescription(dest string) Option {
+	return func(r *reflector) {
+		r.refl.Spec.Info.WithDescription(dest)
+	}
+}
+
+// IsValid 判断 reflector 是否有效
 // 当前只前端是否为 nil
-func IsValidReflector() bool {
-	return reflector != nil
+func IsValid() bool {
+	return r != nil
 }
 
 // AddRouter 添加一个路由
 func AddRouter(path string, method string, input interface{}) {
-	if !IsValidReflector() {
+	if !IsValid() {
 		return
 	}
 
 	path = parsePath(path)
 
-	oc, err := reflector.NewOperationContext(method, path)
+	oc, err := r.refl.NewOperationContext(method, path)
 	if err != nil {
 		panic(err)
 	}
 	oc.AddReqStructure(input)
 
-	err = reflector.AddOperation(oc)
+	err = r.refl.AddOperation(oc)
 	if err != nil {
 		panic(err)
 	}
@@ -66,64 +140,10 @@ func parsePath(path string) string {
 	return path
 }
 
-// Output 输出 OpenAPI yaml 文件到 os.Stdout
-func OutputToStdout() {
-	output(os.Stdout)
-}
-
-// OutputToFile 输出 OpenAPI Yaml 到文件
-func OutputToFile(name string) {
-	if !IsValidReflector() {
+func Output() {
+	if !IsValid() {
 		return
 	}
 
-	f, err := os.OpenFile(name, os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModePerm)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	output(f)
+	r.write()
 }
-
-func output(w io.Writer) {
-	if !IsValidReflector() {
-		return
-	}
-
-	schema, err := reflector.Spec.MarshalYAML()
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = w.Write(schema)
-	if err != nil {
-		panic(err)
-	}
-}
-
-// type Option func()
-
-// func WithOptions(opts ...Option) {
-// 	for i := range opts {
-// 		opts[i]()
-// 	}
-// }
-
-// func WithTitle(title string) Option {
-// 	return func() {
-// 		reflector.Spec.Info.WithTitle(title)
-// 	}
-// }
-
-// func WithVersion(version string) Option {
-// 	return func() {
-// 		reflector.Spec.Info.WithVersion(version)
-// 	}
-// }
-
-// func WithDescription(desc string) Option {
-// 	return func() {
-// 		reflector.Spec.Info.WithDescription(desc)
-// 	}
-// }
