@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/swaggest/openapi-go"
 	"github.com/swaggest/openapi-go/openapi31"
 )
 
@@ -104,6 +105,15 @@ func IsValid() bool {
 	return r != nil
 }
 
+type RespStructure struct {
+	Output any
+	Status int
+}
+
+type RespStructurer interface {
+	RespStructure() []RespStructure
+}
+
 // AddRouter 添加一个路由
 func AddRouter(path string, method string, input interface{}) {
 	if !IsValid() {
@@ -116,7 +126,15 @@ func AddRouter(path string, method string, input interface{}) {
 	if err != nil {
 		panic(err)
 	}
+	// 添加 request
 	oc.AddReqStructure(input)
+
+	// 添加 response
+	if rr, ok := input.(RespStructurer); ok {
+		for _, resp := range rr.RespStructure() {
+			oc.AddRespStructure(resp.Output, openapi.WithHTTPStatus(resp.Status))
+		}
+	}
 
 	err = r.refl.AddOperation(oc)
 	if err != nil {
