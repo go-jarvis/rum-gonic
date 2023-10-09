@@ -105,15 +105,6 @@ func IsValid() bool {
 	return r != nil
 }
 
-type RespStructure struct {
-	Output any
-	Status int
-}
-
-type RespStructurer interface {
-	RespStructure() []RespStructure
-}
-
 // AddRouter 添加一个路由
 func AddRouter(path string, method string, input interface{}) {
 	if !IsValid() {
@@ -136,6 +127,15 @@ func AddRouter(path string, method string, input interface{}) {
 		}
 	}
 
+	// 添加 security
+	oc.AddSecurity("default")
+	if ss, ok := input.(SecurityStructurer); ok {
+		for _, s := range ss.SecurityStructure() {
+			oc.AddSecurity(s.Name, s.Rules...)
+		}
+	}
+
+	// reflector 注册 Operation
 	err = r.refl.AddOperation(oc)
 	if err != nil {
 		panic(err)
