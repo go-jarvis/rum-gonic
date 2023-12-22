@@ -35,8 +35,9 @@ func (rs *RumServer) SetDefaults() {
 }
 
 func (rs *RumServer) Initialize() {
-	e := gin.New()
+	rs.SetDefaults()
 
+	e := gin.New()
 	rg := e.Group("/")
 	router := NewRouter("/").setGinRG(rg)
 
