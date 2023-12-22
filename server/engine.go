@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 	"path/filepath"
 	"reflect"
@@ -14,35 +15,91 @@ import (
 
 type HandlerFunc = gin.HandlerFunc
 
-type rumServer struct {
+// RumServer 定义 rum server
+type RumServer struct {
+	Listen string `env:""`
+
 	engine *gin.Engine
 	router *rumRouter
+	ctx    context.Context
 }
 
-func (e *rumServer) Run(addr string) error {
-	e.initial()
+func (rs *RumServer) SetDefaults() {
+	if rs.ctx == nil {
+		rs.ctx = context.Background()
+	}
+
+	if rs.Listen == "" {
+		rs.Listen = ":8080"
+	}
+}
+
+func (rs *RumServer) Initialize() {
+	e := gin.New()
+
+	rg := e.Group("/")
+	router := NewRouter("/").setGinRG(rg)
+
+	rs.engine = e
+	rs.router = router
+}
+
+// WithContext 设置 context
+func (rs *RumServer) WithContext(ctx context.Context) {
+	rs.ctx = ctx
+}
+
+// Context 获取 context
+func (rs *RumServer) Context() context.Context {
+	return rs.ctx
+}
+
+// injectContext 将 context 注入到 gin.Context.Request 中
+func (rs *RumServer) injectContext() {
+	h := func(c *gin.Context) {
+		r2 := c.Request.WithContext(rs.ctx)
+		c.Request = r2
+	}
+
+	rs.Use(h)
+}
+
+// Run 启动服务
+func (rs *RumServer) Run(addr ...string) error {
+
+	rs.injectContext()
+	rs.initial()
 
 	openapi31.Output()
 
-	return e.engine.Run(addr)
+	if len(addr) != 0 {
+		rs.Listen = addr[0]
+	}
+
+	return rs.engine.Run(rs.Listen)
 }
 
-func (e *rumServer) initial() {
-	e.router.initial()
+// initial 初始化
+func (rs *RumServer) initial() {
+	rs.router.initial()
 }
 
-func (e *rumServer) Use(handlers ...HandlerFunc) {
-	e.router.Use(handlers...)
+// Use 注册中间件
+func (rs *RumServer) Use(handlers ...HandlerFunc) {
+	rs.router.Use(handlers...)
 }
 
-func (e *rumServer) Handle(handlers ...operator.Operator) {
-	e.router.Handle(handlers...)
+// Handle 添加业务逻辑
+func (rs *RumServer) Handle(handlers ...operator.Operator) {
+	rs.router.Handle(handlers...)
 }
 
-func (e *rumServer) AddRouter(routers ...*rumRouter) {
-	e.router.AddRouter(routers...)
+// AddRouter 添加子路由
+func (rs *RumServer) AddRouter(routers ...*rumRouter) {
+	rs.router.AddRouter(routers...)
 }
 
+// rumRouter 路由组
 type rumRouter struct {
 	path  string
 	ginRG *gin.RouterGroup
@@ -56,6 +113,7 @@ type rumRouter struct {
 	absolutelyPath string
 }
 
+// NewRouter 创建路由组
 func NewRouter(path string) *rumRouter {
 	return &rumRouter{
 		path:       path,
