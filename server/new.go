@@ -13,13 +13,9 @@ func Default() *RumServer {
 }
 
 func New() *RumServer {
-	e := gin.New()
 
-	rg := e.Group("/")
-	router := NewRouter("/").setGinRG(rg)
+	rs := &RumServer{}
+	rs.Initialize()
 
-	return &RumServer{
-		engine: e,
-		router: router,
-	}
+	return rs
 }
